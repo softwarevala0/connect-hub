@@ -727,7 +727,7 @@ function SidebarLink({
     </div>
   );
 }
-}
+
 
 /* ─────────── Breadcrumb ─────────── */
 
