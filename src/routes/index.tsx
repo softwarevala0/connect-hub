@@ -22,7 +22,10 @@ import {
   ManagementSection, SystemHealthCenter, IntegrationHub, AnalyticsCenter,
   AuditExplorer, PermissionMatrixGrid, type ManagementSectionId,
 } from "@/components/manager/ManagementSections";
-import { ManagerActionProvider, requestSection } from "@/components/manager/manager-actions";
+import { ManagerActionProvider, requestSection, useManagerActions } from "@/components/manager/manager-actions";
+import { resolveActionSpec } from "@/components/manager/action-registry";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 
 function AnalyticsAccessNotice() {
@@ -1038,68 +1041,146 @@ function KpiRow({ id: _id }: { id: SectionId }) {
 /* ─────────── Quick Actions ─────────── */
 
 function QuickActions() {
-  const primary = [
-    { label: "Save", icon: Save, tone: "primary" as const },
-    { label: "Discard", icon: Undo2 },
-    { label: "Reset", icon: RotateCcw },
-    { label: "Preview", icon: Eye },
+  const { run, staged, clearStaged } = useManagerActions();
+  const [saved, setSaved] = useState(true);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
+
+  const dirty = staged.length;
+
+  async function work(label: string, after: () => void) {
+    setBusy(label);
+    await new Promise((r) => setTimeout(r, 500));
+    setBusy(null);
+    after();
+  }
+
+  const primary: { label: string; icon: typeof Save; tone?: "primary"; onClick: () => void }[] = [
+    {
+      label: "Save", icon: Save, tone: "primary",
+      onClick: () => void work("Save", () => { setSaved(true); toast.success(`Configuration saved · ${dirty} staged change${dirty === 1 ? "" : "s"} committed to this session.`); }),
+    },
+    {
+      label: "Discard", icon: Undo2,
+      onClick: () => run({
+        label: "Discard changes", module: "Workspace", action: "config.discard",
+        description: "Discard every staged change in this session.",
+        destructive: true, confirm: "All staged changes will be removed. Continue?",
+        submitLabel: "Discard changes",
+        onSubmit: () => { clearStaged(); setSaved(true); return "Staged changes discarded"; },
+      }),
+    },
+    {
+      label: "Reset", icon: RotateCcw,
+      onClick: () => run({
+        label: "Reset to defaults", module: "Workspace", action: "config.reset",
+        description: "Reset this section to its published defaults.",
+        confirm: "Reset every field in this section to the published baseline?",
+        submitLabel: "Reset section",
+        onSubmit: () => { setSaved(true); return "Section reset to published baseline"; },
+      }),
+    },
+    {
+      label: "Preview", icon: Eye,
+      onClick: () => run({
+        label: "Preview changes", module: "Workspace", action: "config.preview",
+        title: "Preview staged changes",
+        detail: (
+          <div className="flex flex-col gap-1.5">
+            <p>{dirty === 0 ? "Nothing is staged in this session yet." : `${dirty} staged change${dirty === 1 ? "" : "s"} would be published.`}</p>
+            <p className="text-[14px] text-[oklch(0.84_0.05_248)]">Open the Audit Explorer to inspect every before/after value.</p>
+          </div>
+        ),
+        submitLabel: "Close",
+      }),
+    },
   ];
-  const secondary = [
-    { label: "Export", icon: Download },
-    { label: "Import", icon: Upload },
-    { label: "Compare", icon: GitCompare },
-    { label: "History", icon: History },
-    { label: "Refresh", icon: RefreshCw },
-    { label: "Filter", icon: Filter },
-    { label: "Fullscreen", icon: Maximize2 },
-    { label: "More", icon: MoreHorizontal },
+
+  const secondary: { label: string; icon: typeof Save; onClick: () => void }[] = [
+    { label: "Export", icon: Download, onClick: () => run(resolveActionSpec("Export ledger", "Workspace")) },
+    {
+      label: "Import", icon: Upload,
+      onClick: () => run({
+        label: "Import configuration", module: "Workspace", action: "config.import",
+        description: "Import a configuration bundle into this workspace.",
+        submitLabel: "Import",
+        fields: [
+          { name: "source", label: "Bundle source", required: true, placeholder: "config-v41.json" },
+          { name: "mode", label: "Mode", type: "select", required: true, options: ["Merge", "Replace"] },
+        ],
+      }),
+    },
+    { label: "Compare", icon: GitCompare, onClick: () => run(resolveActionSpec("Compare versions", "Workspace")) },
+    { label: "History", icon: History, onClick: () => requestSection("audit") },
+    { label: "Refresh", icon: RefreshCw, onClick: () => void work("Refresh", () => toast.success("Control-plane state refreshed.")) },
+    {
+      label: "Filter", icon: Filter,
+      onClick: () => run({
+        label: "Filter view", module: "Workspace", action: "view.filter",
+        description: "Narrow the records shown in this section.",
+        submitLabel: "Apply filter",
+        fields: [
+          { name: "status", label: "Status", type: "select", options: ["All", "Enabled", "Restricted", "Disabled"], defaultValue: "All" },
+          { name: "owner", label: "Owner contains", placeholder: "e.g. Compliance" },
+        ],
+      }),
+    },
+    {
+      label: "Fullscreen", icon: Maximize2,
+      onClick: () => {
+        const el = document.documentElement;
+        if (!document.fullscreenElement) { void el.requestFullscreen?.(); setFullscreen(true); }
+        else { void document.exitFullscreen?.(); setFullscreen(false); }
+      },
+    },
+    { label: "More", icon: MoreHorizontal, onClick: () => requestSection("system") },
   ];
+
   return (
-    <div className="flex flex-wrap items-center gap-2 card3d card-tone-blue p-2.5 shadow-[0_1px_2px_rgba(0,0,0,0.07)]">
+    <div className="card3d card-tone-violet flex flex-wrap items-center gap-2 p-3">
       <div className="flex flex-wrap items-center gap-1.5">
         {primary.map((b) => {
           const Icon = b.icon;
-          const isPrimary = b.tone === "primary";
           return (
-            <button
+            <Button
               key={b.label}
-              className={`inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[14.5px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 active:scale-95 ${
-                isPrimary
-                  ? "bg-gradient-to-b from-[oklch(0.72_0.189_265)] to-[oklch(0.68_0.184_270)] text-white shadow-[0_2px_6px_-1px_oklch(0.68_0.184_270/0.5)] hover:brightness-110"
-                  : "border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)]"
-              }`}
+              size="sm"
+              onClick={b.onClick}
+              loading={busy === b.label}
+              className={b.tone === "primary" ? "" : "[--cm-blue-700:oklch(0.36_0.09_268)]"}
             >
-              <Icon className="h-3.5 w-3.5" /> {b.label}
-            </button>
+              <Icon className="h-4 w-4" /> {b.label}
+            </Button>
           );
         })}
       </div>
-      <div className="mx-1 hidden h-6 w-px bg-[oklch(0.27_0.025_285)] sm:block" />
-      <div className="flex flex-wrap items-center gap-1">
+      <div className="mx-1 hidden h-6 w-px bg-[oklch(1_0_0/0.18)] sm:block" />
+      <div className="flex flex-wrap items-center gap-1.5">
         {secondary.map((b) => {
           const Icon = b.icon;
           return (
-            <button
+            <Button
               key={b.label}
+              size="sm"
+              variant="ghost"
               title={b.label}
               aria-label={b.label}
-              className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2 text-[14px] font-medium text-[oklch(0.93_0.03_250)] transition-all hover:bg-[oklch(0.185_0.02_285)] hover:text-[oklch(0.985_0.01_255)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40"
+              loading={busy === b.label}
+              onClick={b.onClick}
             >
-              <Icon className="h-3.5 w-3.5" />
-              <span className="hidden md:inline">{b.label}</span>
-            </button>
+              <Icon className="h-4 w-4" />
+              <span className="hidden md:inline">{b.label === "Fullscreen" && fullscreen ? "Exit full" : b.label}</span>
+            </Button>
           );
         })}
       </div>
-      <div className="ml-auto flex items-center gap-2 text-[13.5px] text-[oklch(0.84_0.05_248)]">
-        <CircleDot className="h-2.5 w-2.5 text-[oklch(0.72_0.1575_155)]" />
-        All changes saved
+      <div className="ml-auto flex items-center gap-2 text-[13.5px] font-bold text-[oklch(0.86_0.19_158)]">
+        <CircleDot className="h-3 w-3" />
+        {dirty > 0 && !saved ? `${dirty} unsaved` : dirty > 0 ? `${dirty} staged this session` : "All changes saved"}
       </div>
     </div>
   );
 }
-
-/* ─────────── Context Panel ─────────── */
 
 function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
   const ALL_SUGGESTIONS = useMemo(() => [
