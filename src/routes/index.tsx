@@ -453,7 +453,7 @@ const LANGS: Record<string, string> = {
   Deutsch: "de",
 };
 
-function MenuList({ items }: { items: { label: string; hint?: string; onClick: () => void }[] }) {
+function MenuList({ items }: { items: { label: string; hint?: string | undefined; onClick: () => void }[] }) {
   return (
     <div className="flex flex-col gap-1">
       {items.map((it) => (
@@ -476,8 +476,8 @@ function HeaderMenu({
 }: {
   label: string;
   icon: React.ReactNode;
-  badge?: string;
-  tone?: "accent";
+  badge?: string | undefined;
+  tone?: "accent" | undefined;
   title: string;
   children: (close: () => void) => React.ReactNode;
 }) {
