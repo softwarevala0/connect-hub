@@ -277,13 +277,13 @@ function ActionDialog({
             {spec.destructive && <ShieldAlert className="h-4 w-4 text-[oklch(0.74_0.16_20)]" />}
             {spec.title ?? spec.label}
           </DialogTitle>
-          <DialogDescription className="text-[13.5px] text-[oklch(0.72_0.02_285)]">
+          <DialogDescription className="text-[15px] text-[oklch(0.72_0.02_285)]">
             {spec.description ?? `${spec.module} · management action`}
           </DialogDescription>
         </DialogHeader>
 
         {spec.detail && phase === "form" && (
-          <div className="rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] p-3 text-[13.5px]">
+          <div className="rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px]">
             {spec.detail}
           </div>
         )}
@@ -296,11 +296,11 @@ function ActionDialog({
             {fields.map((f) => {
               const id = `cm-f-${f.name}`;
               const err = errors[f.name];
-              const common = "w-full rounded-xl border bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[14px] text-[oklch(0.965_0.012_285)] outline-none transition-colors placeholder:text-[oklch(0.6_0.02_285)] focus-visible:border-[oklch(0.72_0.168_265)] focus-visible:ring-4 focus-visible:ring-[oklch(0.72_0.168_265)]/15";
+              const common = "w-full rounded-xl border bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[15.5px] text-[oklch(0.965_0.012_285)] outline-none transition-colors placeholder:text-[oklch(0.6_0.02_285)] focus-visible:border-[oklch(0.72_0.168_265)] focus-visible:ring-4 focus-visible:ring-[oklch(0.72_0.168_265)]/15";
               const border = err ? "border-[oklch(0.6_0.19_20)]" : "border-[oklch(0.27_0.025_285)]";
               return (
                 <div key={f.name} className="flex flex-col gap-1.5">
-                  <label htmlFor={id} className="text-[13px] font-semibold text-[oklch(0.86_0.02_285)]">
+                  <label htmlFor={id} className="text-[14.5px] font-semibold text-[oklch(0.86_0.02_285)]">
                     {f.label}{f.required && <span className="ml-0.5 text-[oklch(0.74_0.16_20)]">*</span>}
                   </label>
                   {f.type === "select" ? (
@@ -352,7 +352,7 @@ function ActionDialog({
                     />
                   )}
                   {(err || f.hint) && (
-                    <span className={`text-[12.5px] ${err ? "text-[oklch(0.74_0.16_20)]" : "text-[oklch(0.72_0.02_285)]"}`}>
+                    <span className={`text-[14px] ${err ? "text-[oklch(0.74_0.16_20)]" : "text-[oklch(0.72_0.02_285)]"}`}>
                       {err ?? f.hint}
                     </span>
                   )}
@@ -364,25 +364,25 @@ function ActionDialog({
         )}
 
         {phase === "confirm" && (
-          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.34_0.09_85)] bg-[oklch(0.185_0.02_285)] p-3 text-[13.5px] text-[oklch(0.86_0.02_285)]">
+          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.34_0.09_85)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.86_0.02_285)]">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.78_0.147_75)]" />
             <span>{spec.confirm}</span>
           </div>
         )}
 
         {phase === "processing" && (
-          <div className="flex items-center gap-2 rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] p-3 text-[13.5px] text-[oklch(0.86_0.02_285)]">
+          <div className="flex items-center gap-2 rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.86_0.02_285)]">
             <Loader2 className="h-4 w-4 animate-spin text-[oklch(0.72_0.168_265)]" /> Applying…
           </div>
         )}
 
         {phase === "success" && (
-          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.38_0.1_155)] bg-[oklch(0.185_0.02_285)] p-3 text-[13.5px] text-[oklch(0.86_0.02_285)]">
+          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.38_0.1_155)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.86_0.02_285)]">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.72_0.1725_155)]" />
             <span>
               <span className="font-semibold text-[oklch(0.965_0.012_285)]">{spec.label} staged.</span>{" "}
               {message}
-              <span className="mt-1 block text-[12.5px] text-[oklch(0.72_0.02_285)]">
+              <span className="mt-1 block text-[14px] text-[oklch(0.72_0.02_285)]">
                 Kept in this session&apos;s change log and audit view. No backend service is connected to the Chat Manager in this build, so nothing was written to a server.
               </span>
             </span>
@@ -390,7 +390,7 @@ function ActionDialog({
         )}
 
         {phase === "error" && (
-          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.36_0.11_20)] bg-[oklch(0.185_0.02_285)] p-3 text-[13.5px] text-[oklch(0.86_0.02_285)]">
+          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.36_0.11_20)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.86_0.02_285)]">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.74_0.16_20)]" /> {message}
           </div>
         )}
@@ -416,7 +416,7 @@ function ActionDialog({
         </DialogFooter>
 
         {phase === "form" && dirty && (
-          <p className="text-[12.5px] text-[oklch(0.78_0.147_75)]">Unsaved changes in this form.</p>
+          <p className="text-[14px] text-[oklch(0.78_0.147_75)]">Unsaved changes in this form.</p>
         )}
       </DialogContent>
     </Dialog>
@@ -458,7 +458,7 @@ export function ActionButton({
       aria-label={ariaLabel ?? (children ? undefined : spec.label)}
       title={title ?? (children ? undefined : spec.label)}
       onClick={() => run(spec)}
-      className={`h-8 min-h-9 gap-1.5 rounded-lg px-2.5 text-[12.5px] font-semibold shadow-none ${toneCls} ${className}`}
+      className={`h-8 min-h-9 gap-1.5 rounded-lg px-2.5 text-[14px] font-semibold shadow-none ${toneCls} ${className}`}
     >
       {Icon && <Icon className="h-3.5 w-3.5" />}
       {children ?? spec.label}

@@ -73,12 +73,12 @@ function FilterSelect({
   const id = `cm-audit-${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <div className="flex min-w-[8.5rem] flex-1 flex-col gap-1 sm:flex-none">
-      <label htmlFor={id} className={`text-[11.5px] font-bold uppercase tracking-wider ${MUTED}`}>{label}</label>
+      <label htmlFor={id} className={`text-[13px] font-bold uppercase tracking-wider ${MUTED}`}>{label}</label>
       <select
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`min-h-9 rounded-xl border px-2.5 py-2 text-[13px] font-semibold outline-none transition-colors focus-visible:border-[oklch(0.72_0.168_265)] focus-visible:ring-4 focus-visible:ring-[oklch(0.72_0.168_265)]/15 ${
+        className={`min-h-9 rounded-xl border px-2.5 py-2 text-[14.5px] font-semibold outline-none transition-colors focus-visible:border-[oklch(0.72_0.168_265)] focus-visible:ring-4 focus-visible:ring-[oklch(0.72_0.168_265)]/15 ${
           value
             ? "border-[oklch(0.38_0.08_265)] bg-[oklch(0.72_0.168_265)]/12 text-[oklch(0.78_0.14_265)]"
             : "border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.02_285)]"
@@ -132,7 +132,7 @@ export function AuditExplorer({ initialModule = "" }: { initialModule?: string }
           <div className="flex min-w-0 items-center gap-2 rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 focus-within:border-[oklch(0.72_0.168_265)]">
             <Search className={`h-4 w-4 shrink-0 ${MUTED}`} />
             <input
-              className={`min-h-9 w-full bg-transparent text-[13.5px] outline-none placeholder:text-[oklch(0.6_0.02_285)] ${FG}`}
+              className={`min-h-9 w-full bg-transparent text-[15px] outline-none placeholder:text-[oklch(0.6_0.02_285)] ${FG}`}
               placeholder="Search audit ledger — actor, action, entity…"
               aria-label="Search audit ledger"
               value={query}
@@ -158,7 +158,7 @@ export function AuditExplorer({ initialModule = "" }: { initialModule?: string }
             <Button
               type="button" size="sm" variant="ghost" disabled={!hasFilters}
               onClick={() => { setFilters(EMPTY); setQuery(""); }}
-              className="h-9 min-h-9 gap-1.5 rounded-xl border border-[oklch(0.27_0.025_285)] px-3 text-[12.5px] font-semibold text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.22_0.03_285)]"
+              className="h-9 min-h-9 gap-1.5 rounded-xl border border-[oklch(0.27_0.025_285)] px-3 text-[14px] font-semibold text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.22_0.03_285)]"
             >
               <X className="h-3.5 w-3.5" /> Reset all
             </Button>
@@ -167,12 +167,12 @@ export function AuditExplorer({ initialModule = "" }: { initialModule?: string }
           <div className="flex flex-wrap items-center gap-1.5" aria-live="polite">
             <Filter className={`h-3.5 w-3.5 ${MUTED}`} />
             {activeFilters.length === 0 && !query && (
-              <span className={`text-[12.5px] ${MUTED}`}>No filters applied · showing all {records.length} records</span>
+              <span className={`text-[14px] ${MUTED}`}>No filters applied · showing all {records.length} records</span>
             )}
             {query && (
               <button
                 type="button" onClick={() => setQuery("")}
-                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-[oklch(0.38_0.08_265)] bg-[oklch(0.72_0.168_265)]/12 px-2.5 py-0.5 text-[12px] font-semibold text-[oklch(0.78_0.14_265)] hover:bg-[oklch(0.72_0.168_265)]/22"
+                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-[oklch(0.38_0.08_265)] bg-[oklch(0.72_0.168_265)]/12 px-2.5 py-0.5 text-[13.5px] font-semibold text-[oklch(0.78_0.14_265)] hover:bg-[oklch(0.72_0.168_265)]/22"
               >
                 search: “{query}” <X className="h-3 w-3" />
               </button>
@@ -181,12 +181,12 @@ export function AuditExplorer({ initialModule = "" }: { initialModule?: string }
               <button
                 key={k} type="button" onClick={() => update(k, "")}
                 aria-label={`Clear ${k} filter`}
-                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-[oklch(0.38_0.08_265)] bg-[oklch(0.72_0.168_265)]/12 px-2.5 py-0.5 text-[12px] font-semibold text-[oklch(0.78_0.14_265)] hover:bg-[oklch(0.72_0.168_265)]/22"
+                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-[oklch(0.38_0.08_265)] bg-[oklch(0.72_0.168_265)]/12 px-2.5 py-0.5 text-[13.5px] font-semibold text-[oklch(0.78_0.14_265)] hover:bg-[oklch(0.72_0.168_265)]/22"
               >
                 {k}: {v} <X className="h-3 w-3" />
               </button>
             ))}
-            <span className={`ml-auto inline-flex items-center gap-1.5 text-[12.5px] ${MUTED}`}>
+            <span className={`ml-auto inline-flex items-center gap-1.5 text-[14px] ${MUTED}`}>
               {pending && <Loader2 className="h-3.5 w-3.5 animate-spin text-[oklch(0.72_0.168_265)]" />}
               {filtered.length} of {records.length} records
             </span>

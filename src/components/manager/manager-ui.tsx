@@ -28,7 +28,7 @@ export const toneCls: Record<Tone, string> = {
 
 export function Pill({ children, tone = "slate" }: { children: ReactNode; tone?: Tone }) {
   return (
-    <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2 py-0.5 text-[12px] font-bold ${toneCls[tone]}`}>
+    <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2 py-0.5 text-[13.5px] font-bold ${toneCls[tone]}`}>
       {children}
     </span>
   );
@@ -61,7 +61,7 @@ export function DataTable({
                 <th
                   key={h}
                   scope="col"
-                  className={`px-3 py-2.5 text-left text-[12px] font-bold uppercase tracking-wider ${MUTED} ${i > 3 ? "hidden lg:table-cell" : ""}`}
+                  className={`px-3 py-2.5 text-left text-[13.5px] font-bold uppercase tracking-wider ${MUTED} ${i > 3 ? "hidden lg:table-cell" : ""}`}
                 >
                   {h}
                 </th>
@@ -71,14 +71,14 @@ export function DataTable({
           <tbody>
             {empty ? (
               <tr>
-                <td colSpan={headers.length} className={`px-3 py-10 text-center text-[13px] ${MUTED}`}>{emptyLabel}</td>
+                <td colSpan={headers.length} className={`px-3 py-10 text-center text-[14.5px] ${MUTED}`}>{emptyLabel}</td>
               </tr>
             ) : rows.map((r, i) => (
               <tr key={i} className={`transition-colors hover:bg-[oklch(0.185_0.02_285)] ${i > 0 ? "border-t border-[oklch(0.185_0.02_285)]" : ""}`}>
                 {r.map((c, j) => (
                   <td
                     key={j}
-                    className={`px-3 py-2.5 text-[13.5px] ${j === 0 ? `font-semibold ${FG}` : "text-[oklch(0.86_0.02_285)]"} ${j > 3 ? "hidden lg:table-cell" : ""}`}
+                    className={`px-3 py-2.5 text-[15px] ${j === 0 ? `font-semibold ${FG}` : "text-[oklch(0.86_0.02_285)]"} ${j > 3 ? "hidden lg:table-cell" : ""}`}
                   >
                     {c}
                   </td>
@@ -91,18 +91,18 @@ export function DataTable({
 
       {/* Mobile: stacked record cards, no horizontal scrolling */}
       <ul className="flex flex-col gap-2 p-2 md:hidden">
-        {empty && <li className={`px-2 py-6 text-center text-[13px] ${MUTED}`}>{emptyLabel}</li>}
+        {empty && <li className={`px-2 py-6 text-center text-[14.5px] ${MUTED}`}>{emptyLabel}</li>}
         {rows.map((r, i) => (
           <li
             key={i}
             className="rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] p-3 transition-colors"
           >
-            <div className={`text-[14px] font-bold ${FG}`}>{r[0]}</div>
+            <div className={`text-[15.5px] font-bold ${FG}`}>{r[0]}</div>
             <dl className="mt-2 grid grid-cols-1 gap-1.5">
               {r.slice(1).map((c, j) => (
                 <div key={j} className="grid grid-cols-[minmax(0,7rem)_minmax(0,1fr)] items-start gap-2">
-                  <dt className={`text-[11.5px] font-bold uppercase tracking-wider ${MUTED}`}>{headers[j + 1]}</dt>
-                  <dd className="min-w-0 text-[13.5px] text-[oklch(0.86_0.02_285)]">{c}</dd>
+                  <dt className={`text-[13px] font-bold uppercase tracking-wider ${MUTED}`}>{headers[j + 1]}</dt>
+                  <dd className="min-w-0 text-[15px] text-[oklch(0.86_0.02_285)]">{c}</dd>
                 </div>
               ))}
             </dl>
@@ -110,7 +110,7 @@ export function DataTable({
         ))}
       </ul>
 
-      {note && <div className={`border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[12.5px] ${MUTED}`}>{note}</div>}
+      {note && <div className={`border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[14px] ${MUTED}`}>{note}</div>}
     </div>
   );
 }
@@ -128,10 +128,10 @@ export function MiniStats({
               <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg border ${toneCls[s.tone ?? "indigo"]}`}>
                 <Icon className="h-3.5 w-3.5" />
               </span>
-              <span className={`min-w-0 truncate text-[12px] font-bold uppercase tracking-wider ${MUTED}`}>{s.label}</span>
+              <span className={`min-w-0 truncate text-[13.5px] font-bold uppercase tracking-wider ${MUTED}`}>{s.label}</span>
             </div>
             <div className={`mt-2 font-mono text-[19px] font-bold sm:text-[21px] ${FG}`}>{s.value}</div>
-            {s.hint && <div className={`mt-0.5 text-[12px] ${MUTED}`}>{s.hint}</div>}
+            {s.hint && <div className={`mt-0.5 text-[13.5px] ${MUTED}`}>{s.hint}</div>}
           </div>
         );
       })}
@@ -150,7 +150,7 @@ export function Bar({ value, tone = "indigo" }: { value: number; tone?: Tone }) 
       <div className="h-1.5 min-w-[72px] flex-1 overflow-hidden rounded-full bg-[oklch(0.185_0.02_285)]">
         <span className={`block h-full rounded-full ${color} transition-[width] duration-700`} style={{ width: `${Math.min(100, value)}%` }} />
       </div>
-      <span className="shrink-0 font-mono text-[12px] font-bold text-[oklch(0.86_0.02_285)]">{value}%</span>
+      <span className="shrink-0 font-mono text-[13.5px] font-bold text-[oklch(0.86_0.02_285)]">{value}%</span>
     </div>
   );
 }
