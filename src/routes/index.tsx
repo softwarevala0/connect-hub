@@ -162,6 +162,8 @@ function ChatManagerPage() {
 function ChatManagerShell() {
   const [active, setActive] = useState<SectionId>("workspace");
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [recent, setRecent] = useLocalList("cm.recent", ["security-policy", "roles"]);
   const [pinned, setPinned] = useLocalList("cm.pinned", ["message-policy", "audit"]);
   const activeItem = ALL_ITEMS.find((i) => i.id === active)!;
@@ -263,7 +265,7 @@ function ChatManagerShell() {
 
 /* ─────────── Global Header ─────────── */
 
-function GlobalHeader({ onOpenPalette }: { onOpenPalette: () => void }) {
+function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void; onOpenNav: () => void }) {
   return (
     <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-3 border-b border-[oklch(0.27_0.025_285)] bg-[oklch(0.17_0.025_285)]/92 px-4 backdrop-blur-xl md:px-6">
       <div className="flex items-center gap-2.5">
@@ -688,7 +690,7 @@ function ManagerSidebar({
 function SidebarLink({
   item, active, collapsed, onSelect, pinned, onTogglePin,
 }: {
-  item: (typeof ALL_ITEMS)[number];
+  item: NavItem;
   active: boolean;
   collapsed: boolean;
   onSelect: (id: SectionId) => void;
