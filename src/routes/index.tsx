@@ -530,310 +530,187 @@ const SECTION_SHORTCUTS: Partial<Record<SectionId, string>> = {
   notifications: "G N",
 };
 
-function MegaNav({
-  active, activeGroup, onSelect, recent, pinned, onTogglePin,
+function ManagerSidebar({
+  active, onSelect, recent, pinned, onTogglePin, collapsed, onToggleCollapse,
 }: {
   active: SectionId;
-  activeGroup: string;
   onSelect: (id: SectionId) => void;
   recent: string[];
   pinned: string[];
   onTogglePin: (id: string) => void;
+  collapsed: boolean;
+  onToggleCollapse: () => void;
 }) {
-  const [open, setOpen] = useState<string | null>(null);
-  const [focusIdx, setFocusIdx] = useState(0);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const groupBtnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const [query, setQuery] = useState("");
+  const [openGroups, setOpenGroups] = useState<string[]>(() =>
+    NAV.filter((g) => g.items.some((i) => i.id === active)).map((g) => g.label),
+  );
 
-  useEffect(() => {
-    function onDoc(e: MouseEvent) {
-      if (!rootRef.current) return;
-      if (!rootRef.current.contains(e.target as Node)) setOpen(null);
-    }
-    document.addEventListener("mousedown", onDoc);
-    return () => document.removeEventListener("mousedown", onDoc);
-  }, []);
-
-  // Reset focus and focus first item when a menu opens
-  useEffect(() => {
-    if (!open) return;
-    setFocusIdx(0);
-    const id = requestAnimationFrame(() => itemRefs.current[0]?.focus());
-    return () => cancelAnimationFrame(id);
-  }, [open]);
-
-  const recentItems = recent
-    .map((id) => ALL_ITEMS.find((i) => i.id === id))
-    .filter(Boolean) as typeof ALL_ITEMS;
   const pinnedItems = pinned
     .map((id) => ALL_ITEMS.find((i) => i.id === id))
     .filter(Boolean) as typeof ALL_ITEMS;
 
-  const focusGroup = (dir: 1 | -1) => {
-    const labels = NAV.map((g) => g.label);
-    const cur = open ? labels.indexOf(open) : 0;
-    const next = (cur + dir + labels.length) % labels.length;
-    const nextLabel = labels[next] ?? null;
-    setOpen(nextLabel);
-    if (nextLabel) groupBtnRefs.current[nextLabel]?.focus();
-  };
+  const filtered = useMemo(() => {
+    if (!query.trim()) return NAV;
+    return NAV.map((g) => ({
+      ...g,
+      items: g.items.filter((i) => fuzzyScore(`${i.label} ${i.hint ?? ""}`, query) > 0),
+    })).filter((g) => g.items.length > 0);
+  }, [query]);
+
+  const toggleGroup = (label: string) =>
+    setOpenGroups((o) => (o.includes(label) ? o.filter((l) => l !== label) : [...o, label]));
+
+  const isOpen = (label: string) => Boolean(query.trim()) || openGroups.includes(label);
 
   return (
-    <div ref={rootRef} className="sticky top-14 z-30 border-b border-[oklch(0.27_0.025_285)] bg-[oklch(0.17_0.025_285)]/92 backdrop-blur-xl">
-      <div
-        role="menubar"
-        aria-label="Chat Manager sections"
-        className="scrollbar-thin mx-auto flex max-w-[1600px] items-center gap-1 overflow-x-auto px-2 md:px-4"
-      >
-        {NAV.map((g) => {
-          const Icon = g.icon;
-          const isActive = activeGroup === g.label;
-          const isOpen = open === g.label;
-          const menuId = `meganav-${g.label.replace(/\s+/g, "-").toLowerCase()}`;
+    <nav
+      aria-label="Chat Manager sections"
+      data-collapsed={collapsed || undefined}
+      className={`sidebar3d relative z-30 flex h-full shrink-0 flex-col overflow-hidden transition-[width] duration-200 ${
+        collapsed ? "w-[76px]" : "w-[292px]"
+      }`}
+    >
+      <div className="flex items-center gap-2 border-b border-[oklch(1_0_0/0.12)] px-3 py-3">
+        <div className="icon3d h-10 w-10 shrink-0 text-[15px] font-black">SV</div>
+        {!collapsed && (
+          <div className="min-w-0 flex-1 leading-tight">
+            <div className="cm-heading truncate text-[16px]">Chat Manager</div>
+            <div className="truncate text-[12.5px] font-semibold text-[oklch(0.82_0.06_250)]">Control Center</div>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={onToggleCollapse}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="btn3d btn3d-hover grid h-9 w-9 shrink-0 place-items-center rounded-xl"
+        >
+          <ChevronRight className={`h-4 w-4 transition-transform ${collapsed ? "" : "rotate-180"}`} />
+        </button>
+      </div>
+
+      {!collapsed && (
+        <div className="px-3 py-2.5">
+          <label className="sr-only" htmlFor="cm-sidebar-search">Filter modules</label>
+          <div className="glass3d flex items-center gap-2 rounded-xl px-2.5 py-2">
+            <Search className="h-4 w-4 shrink-0 text-[oklch(0.85_0.09_240)]" aria-hidden="true" />
+            <input
+              id="cm-sidebar-search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Filter modules…"
+              className="min-w-0 flex-1 bg-transparent text-[14px] font-medium text-[oklch(0.97_0.012_260)] outline-none placeholder:text-[oklch(0.78_0.05_250)]"
+            />
+            {query && (
+              <button type="button" onClick={() => setQuery("")} aria-label="Clear filter" className="text-[oklch(0.85_0.09_240)]">
+                <XIcon className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto px-2.5 pb-3">
+        {!collapsed && pinnedItems.length > 0 && !query.trim() && (
+          <div className="mb-2">
+            <div className="px-1.5 py-1 text-[11.5px] font-extrabold uppercase tracking-[0.14em] text-[oklch(0.84_0.09_240)]">Pinned</div>
+            {pinnedItems.map((it) => (
+              <SidebarLink
+                key={`pin-${it.id}`} item={it} active={active === it.id}
+                collapsed={collapsed} onSelect={onSelect} pinned onTogglePin={onTogglePin}
+              />
+            ))}
+          </div>
+        )}
+
+        {filtered.map((g) => {
+          const GIcon = g.icon;
+          const open = isOpen(g.label);
           return (
-            <div key={g.label} className="relative shrink-0">
+            <div key={g.label} className="mb-1.5">
               <button
-                ref={(el) => { groupBtnRefs.current[g.label] = el; }}
-                role="menuitem"
-                aria-haspopup="menu"
-                aria-expanded={isOpen}
-                aria-controls={menuId}
-                onClick={() => setOpen(isOpen ? null : g.label)}
-                onMouseEnter={() => open && setOpen(g.label)}
-                onKeyDown={(e) => {
-                  if (e.key === "ArrowRight") { e.preventDefault(); focusGroup(1); }
-                  else if (e.key === "ArrowLeft") { e.preventDefault(); focusGroup(-1); }
-                  else if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setOpen(g.label);
-                  } else if (e.key === "Escape") {
-                    setOpen(null);
-                  }
-                }}
-                className={`inline-flex h-11 items-center gap-1.5 rounded-lg px-3 text-[14px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
-                  isActive
-                    ? "text-[oklch(0.68_0.161_265)]"
-                    : "text-[oklch(0.86_0.02_285)] hover:text-[oklch(0.965_0.012_285)]"
-                }`}
+                type="button"
+                onClick={() => toggleGroup(g.label)}
+                aria-expanded={open}
+                title={g.label}
+                className="flex w-full items-center gap-2 rounded-xl px-1.5 py-2 text-left transition-colors hover:bg-[oklch(1_0_0/0.07)]"
               >
-                <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                {g.label}
-                <ChevronDown className={`h-3 w-3 opacity-70 transition-transform ${isOpen ? "rotate-180" : ""}`} aria-hidden="true" />
-                {isActive && (
-                  <span className="absolute inset-x-2 bottom-0 h-[2px] rounded-full bg-gradient-to-r from-[oklch(0.72_0.189_265)] to-[oklch(0.68_0.161_275)]" aria-hidden="true" />
+                <span className="icon3d h-9 w-9 shrink-0"><GIcon className="h-4 w-4" /></span>
+                {!collapsed && (
+                  <>
+                    <span className="flex-1 truncate text-[14px] font-extrabold uppercase tracking-[0.1em] text-[oklch(0.92_0.05_245)]">{g.label}</span>
+                    <ChevronDown className={`h-4 w-4 text-[oklch(0.84_0.09_240)] transition-transform ${open ? "rotate-180" : ""}`} />
+                  </>
                 )}
               </button>
-
-              {isOpen && (
-                <div
-                  id={menuId}
-                  role="menu"
-                  aria-label={`${g.label} modules`}
-                  onKeyDown={(e) => {
-                    const items = g.items;
-                    if (e.key === "Escape") {
-                      e.preventDefault();
-                      setOpen(null);
-                      groupBtnRefs.current[g.label]?.focus();
-                    } else if (e.key === "ArrowDown") {
-                      e.preventDefault();
-                      setFocusIdx((i) => {
-                        const n = Math.min(i + 1, items.length - 1);
-                        itemRefs.current[n]?.focus();
-                        return n;
-                      });
-                    } else if (e.key === "ArrowUp") {
-                      e.preventDefault();
-                      setFocusIdx((i) => {
-                        const n = Math.max(i - 1, 0);
-                        itemRefs.current[n]?.focus();
-                        return n;
-                      });
-                    } else if (e.key === "Home") {
-                      e.preventDefault();
-                      setFocusIdx(0);
-                      itemRefs.current[0]?.focus();
-                    } else if (e.key === "End") {
-                      e.preventDefault();
-                      const n = items.length - 1;
-                      setFocusIdx(n);
-                      itemRefs.current[n]?.focus();
-                    } else if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-                      e.preventDefault();
-                      focusGroup(e.key === "ArrowRight" ? 1 : -1);
-                    } else if (e.key.toLowerCase() === "p") {
-                      const it = items[focusIdx];
-                      if (it) { e.preventDefault(); onTogglePin(it.id); }
-                    }
-                  }}
-                  className="absolute left-0 top-full z-40 mt-1 w-[min(94vw,760px)] animate-fade-in overflow-hidden rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] shadow-[0_30px_80px_-24px_rgba(0,0,0,0.62)]"
-                >
-                  {/* Header */}
-                  <div className="flex items-center gap-2 border-b border-[oklch(0.185_0.02_285)] bg-gradient-to-br from-[oklch(0.185_0.02_285)] to-[oklch(0.2_0.03_285)] px-4 py-3">
-                    <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-[oklch(0.185_0.02_285)] to-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.161_265)] ring-1 ring-[oklch(0.38_0.06_265)]" aria-hidden="true">
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-[14.5px] font-bold text-[oklch(0.965_0.012_285)]">{g.label}</div>
-                      <div className="text-[12px] text-[oklch(0.72_0.02_285)]">
-                        {g.items.length} controls · Admin only · Enforced from Chat Manager
-                      </div>
-                    </div>
-                    <span className="inline-flex items-center gap-1 rounded-full border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-2 py-0.5 font-mono text-[11px] text-[oklch(0.72_0.02_285)]">
-                      <Command className="h-2.5 w-2.5" aria-hidden="true" /> K to search all
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-0 md:grid-cols-[minmax(0,1fr)_220px]">
-                    {/* Modules grid */}
-                    <div className="p-3">
-                      <div className="mb-1.5 px-1 text-[11px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">Modules</div>
-                      <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
-                        {g.items.map((it, idx) => {
-                          const IIcon = it.icon;
-                          const isSel = active === it.id;
-                          const isPinned = pinned.includes(it.id);
-                          const isFocused = focusIdx === idx;
-                          const sc = SECTION_SHORTCUTS[it.id];
-                          return (
-                            <div
-                              key={it.id}
-                              className={`group relative flex items-start gap-2.5 rounded-xl px-2.5 py-2 text-left transition-all ${
-                                isFocused
-                                  ? "bg-[oklch(0.185_0.02_285)] ring-1 ring-[oklch(0.72_0.168_265)]"
-                                  : isSel
-                                  ? "bg-[oklch(0.185_0.02_285)] ring-1 ring-[oklch(0.38_0.08_265)]"
-                                  : "hover:bg-[oklch(0.185_0.02_285)]"
-                              }`}
-                            >
-                              <button
-                                ref={(el) => { itemRefs.current[idx] = el; }}
-                                role="menuitem"
-                                tabIndex={isFocused ? 0 : -1}
-                                aria-current={isSel ? "page" : undefined}
-                                aria-keyshortcuts={sc ? sc : undefined}
-                                onFocus={() => setFocusIdx(idx)}
-                                onClick={() => { onSelect(it.id); setOpen(null); }}
-                                className="flex min-w-0 flex-1 items-start gap-2.5 text-left focus:outline-none"
-                              >
-                                <div className={`mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg ${
-                                  isSel ? "bg-[oklch(0.205_0.028_285)] text-[oklch(0.68_0.161_265)] ring-1 ring-[oklch(0.38_0.08_265)]" : "bg-[oklch(0.205_0.028_285)] text-[oklch(0.86_0.02_285)] ring-1 ring-[oklch(0.185_0.02_285)]"
-                                }`} aria-hidden="true">
-                                  <IIcon className="h-3.5 w-3.5" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="truncate text-[13.5px] font-semibold text-[oklch(0.965_0.012_285)]">{it.label}</span>
-                                    {isSel && <span className="rounded-full bg-[oklch(0.72_0.168_265)] px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">Now</span>}
-                                  </div>
-                                  {it.hint && <div className="mt-0.5 truncate text-[12px] text-[oklch(0.72_0.02_285)]">{it.hint}</div>}
-                                  {sc && (
-                                    <div className="mt-1 flex items-center gap-1 font-mono text-[11px] text-[oklch(0.72_0.02_285)]" aria-hidden="true">
-                                      {sc.split(" ").map((c, i) => (
-                                        <kbd key={i} className="rounded border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1 py-[1px] font-mono text-[10.5px] font-semibold text-[oklch(0.86_0.02_285)]">{c}</kbd>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              </button>
-                              <button
-                                onClick={(e) => { e.stopPropagation(); onTogglePin(it.id); }}
-                                tabIndex={-1}
-                                title={isPinned ? "Unpin (P)" : "Pin to top (P)"}
-                                aria-label={isPinned ? `Unpin ${it.label}` : `Pin ${it.label} to top`}
-                                aria-pressed={isPinned}
-                                className={`grid h-6 w-6 shrink-0 place-items-center rounded-md opacity-0 transition-all group-hover:opacity-100 focus-visible:opacity-100 ${
-                                  isPinned
-                                    ? "!opacity-100 bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.161_265)]"
-                                    : "text-[oklch(0.72_0.02_285)] hover:bg-[oklch(0.205_0.028_285)] hover:text-[oklch(0.68_0.161_265)]"
-                                }`}
-                              >
-                                {isPinned ? <Pin className="h-3 w-3 fill-current" /> : <PinOff className="h-3 w-3" />}
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Recent + Pinned rail */}
-                    <div className="border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] p-3 md:border-l md:border-t-0">
-                      <div className="mb-1.5 flex items-center gap-1 px-1 text-[11px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">
-                        <Pin className="h-2.5 w-2.5 fill-current text-[oklch(0.68_0.161_265)]" aria-hidden="true" /> Pinned
-                      </div>
-                      {pinnedItems.length === 0 ? (
-                        <div className="mb-3 rounded-lg border border-dashed border-[oklch(0.27_0.025_285)] bg-[oklch(0.24_0.035_285)]/60 px-2 py-2 text-[12px] text-[oklch(0.72_0.02_285)]">
-                          Focus a module and press P to pin it here.
-                        </div>
-                      ) : (
-                        <ul className="mb-3 flex flex-col gap-0.5">
-                          {pinnedItems.map((it) => {
-                            const IIcon = it.icon;
-                            return (
-                              <li key={it.id}>
-                                <button
-                                  onClick={() => { onSelect(it.id); setOpen(null); }}
-                                  className="flex w-full items-center gap-2 rounded-md px-1.5 py-1.5 text-left text-[12.5px] text-[oklch(0.965_0.012_285)] hover:bg-[oklch(0.205_0.028_285)]"
-                                >
-                                  <IIcon className="h-3 w-3 text-[oklch(0.68_0.161_265)]" aria-hidden="true" />
-                                  <span className="truncate flex-1">{it.label}</span>
-                                  <ArrowUpRight className="h-3 w-3 text-[oklch(0.72_0.02_285)]" aria-hidden="true" />
-                                </button>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      )}
-
-                      <div className="mb-1.5 flex items-center gap-1 px-1 text-[11px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">
-                        <Clock className="h-2.5 w-2.5" aria-hidden="true" /> Recently Used
-                      </div>
-                      {recentItems.length === 0 ? (
-                        <div className="rounded-lg border border-dashed border-[oklch(0.27_0.025_285)] bg-[oklch(0.24_0.035_285)]/60 px-2 py-2 text-[12px] text-[oklch(0.72_0.02_285)]">
-                          Recent modules appear here.
-                        </div>
-                      ) : (
-                        <ul className="flex flex-col gap-0.5">
-                          {recentItems.map((it) => {
-                            const IIcon = it.icon;
-                            return (
-                              <li key={it.id}>
-                                <button
-                                  onClick={() => { onSelect(it.id); setOpen(null); }}
-                                  className="flex w-full items-center gap-2 rounded-md px-1.5 py-1.5 text-left text-[12.5px] text-[oklch(0.965_0.012_285)] hover:bg-[oklch(0.205_0.028_285)]"
-                                >
-                                  <IIcon className="h-3 w-3 text-[oklch(0.72_0.02_285)]" aria-hidden="true" />
-                                  <span className="truncate flex-1">{it.label}</span>
-                                </button>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Footer with shortcuts preview */}
-                  <div className="flex items-center justify-between gap-3 border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.205_0.028_285)] px-4 py-2 font-mono text-[11.5px] text-[oklch(0.72_0.02_285)]">
-                    <span className="inline-flex items-center gap-1.5">
-                      <Lock className="h-2.5 w-2.5 text-[oklch(0.72_0.1575_155)]" aria-hidden="true" /> All controls audited & versioned
-                    </span>
-                    <span className="hidden items-center gap-2 sm:inline-flex" aria-label="Keyboard shortcuts">
-                      <span className="inline-flex items-center gap-1"><kbd className="rounded border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1">↑↓</kbd> move</span>
-                      <span className="inline-flex items-center gap-1"><kbd className="rounded border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1">↵</kbd> open</span>
-                      <span className="inline-flex items-center gap-1"><kbd className="rounded border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1">P</kbd> pin</span>
-                      <span className="inline-flex items-center gap-1"><kbd className="rounded border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1">Esc</kbd> close</span>
-                    </span>
-                  </div>
+              {open && (
+                <div className="mt-1 flex flex-col gap-1">
+                  {g.items.map((it) => (
+                    <SidebarLink
+                      key={it.id} item={it} active={active === it.id}
+                      collapsed={collapsed} onSelect={onSelect}
+                      pinned={pinned.includes(it.id)} onTogglePin={onTogglePin}
+                    />
+                  ))}
                 </div>
               )}
             </div>
           );
         })}
+        {filtered.length === 0 && (
+          <p className="px-2 py-4 text-[13.5px] text-[oklch(0.85_0.05_245)]">No module matches “{query}”.</p>
+        )}
       </div>
+
+      <div className="border-t border-[oklch(1_0_0/0.12)] px-3 py-2 text-[12px] font-semibold text-[oklch(0.84_0.07_242)]">
+        {collapsed ? <Lock className="mx-auto h-4 w-4" /> : <span className="inline-flex items-center gap-1.5"><Lock className="h-3.5 w-3.5" /> Audited &amp; versioned</span>}
+      </div>
+    </nav>
+  );
+}
+
+function SidebarLink({
+  item, active, collapsed, onSelect, pinned, onTogglePin,
+}: {
+  item: (typeof ALL_ITEMS)[number];
+  active: boolean;
+  collapsed: boolean;
+  onSelect: (id: SectionId) => void;
+  pinned: boolean;
+  onTogglePin: (id: string) => void;
+}) {
+  const Icon = item.icon;
+  return (
+    <div className={`group relative flex items-center gap-2 rounded-xl pr-1 ${active ? "btn3d" : "hover:bg-[oklch(1_0_0/0.08)]"}`}>
+      <button
+        type="button"
+        onClick={() => onSelect(item.id)}
+        aria-current={active ? "page" : undefined}
+        title={item.label}
+        className="flex min-h-11 min-w-0 flex-1 items-center gap-2.5 rounded-xl px-1.5 py-1.5 text-left focus:outline-none"
+      >
+        <span className={`icon3d h-9 w-9 shrink-0 ${active ? "" : "opacity-95"}`}><Icon className="h-4 w-4" /></span>
+        {!collapsed && (
+          <span className="min-w-0 flex-1">
+            <span className={`block truncate text-[14.5px] font-bold ${active ? "text-white" : "text-[oklch(0.94_0.03_250)]"}`}>{item.label}</span>
+            {item.hint && <span className="block truncate text-[12.5px] font-medium text-[oklch(0.82_0.06_245)]">{item.hint}</span>}
+          </span>
+        )}
+      </button>
+      {!collapsed && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onTogglePin(item.id); }}
+          aria-pressed={pinned}
+          aria-label={pinned ? `Unpin ${item.label}` : `Pin ${item.label}`}
+          className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg text-[oklch(0.86_0.08_240)] transition-opacity ${pinned ? "opacity-100" : "opacity-0 group-hover:opacity-100 focus-visible:opacity-100"}`}
+        >
+          {pinned ? <Pin className="h-3.5 w-3.5 fill-current" /> : <PinOff className="h-3.5 w-3.5" />}
+        </button>
+      )}
     </div>
   );
+}
 }
 
 /* ─────────── Breadcrumb ─────────── */
