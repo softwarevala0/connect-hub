@@ -12,7 +12,7 @@
  */
 import {
   createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
-  type ReactNode,
+  type ComponentType, type ReactNode,
 } from "react";
 import { AlertTriangle, CheckCircle2, Loader2, ShieldAlert } from "lucide-react";
 import {
@@ -405,7 +405,7 @@ function ActionDialog({
             type="button"
             size="sm"
             variant={spec.destructive && phase !== "success" ? "destructive" : "default"}
-            disabled={busy}
+            loading={busy}
             onClick={onPrimary}
           >
             {phase === "success" ? "Done"
@@ -422,3 +422,47 @@ function ActionDialog({
     </Dialog>
   );
 }
+
+/* ─────────── Shared trigger button ─────────── */
+
+export function ActionButton({
+  spec,
+  children,
+  icon: Icon,
+  tone = "ghost",
+  className = "",
+  ariaLabel,
+  title,
+}: {
+  spec: ActionSpec;
+  children?: ReactNode;
+  icon?: ComponentType<{ className?: string }>;
+  tone?: "ghost" | "primary" | "danger";
+  className?: string;
+  ariaLabel?: string;
+  title?: string;
+}) {
+  const { run } = useManagerActions();
+  const toneCls =
+    tone === "primary"
+      ? "border border-[oklch(0.38_0.08_265)] bg-[oklch(0.72_0.168_265)]/12 text-[oklch(0.78_0.14_265)] hover:bg-[oklch(0.72_0.168_265)]/22"
+      : tone === "danger"
+        ? "border border-[oklch(0.36_0.11_20)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.78_0.15_20)] hover:bg-[oklch(0.22_0.03_285)]"
+        : "border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.72_0.14_265)] hover:bg-[oklch(0.22_0.03_285)]";
+
+  return (
+    <Button
+      type="button"
+      size="sm"
+      variant="ghost"
+      aria-label={ariaLabel ?? (children ? undefined : spec.label)}
+      title={title ?? (children ? undefined : spec.label)}
+      onClick={() => run(spec)}
+      className={`h-8 min-h-9 gap-1.5 rounded-lg px-2.5 text-[12.5px] font-semibold shadow-none ${toneCls} ${className}`}
+    >
+      {Icon && <Icon className="h-3.5 w-3.5" />}
+      {children ?? spec.label}
+    </Button>
+  );
+}
+
