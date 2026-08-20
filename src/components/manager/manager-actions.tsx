@@ -458,9 +458,9 @@ export function ActionButton({
       aria-label={ariaLabel ?? (children ? undefined : spec.label)}
       title={title ?? (children ? undefined : spec.label)}
       onClick={() => run(spec)}
-      className={`h-8 min-h-9 gap-1.5 rounded-lg px-2.5 text-[14px] font-semibold shadow-none ${toneCls} ${className}`}
+      className={`btn3d btn3d-hover h-9 min-h-9 gap-1.5 rounded-xl px-3 text-[14px] font-bold ${toneCls} ${className}`}
     >
-      {Icon && <Icon className="h-3.5 w-3.5" />}
+      {Icon && <Icon className="h-4 w-4" />}
       {children ?? spec.label}
     </Button>
   );
