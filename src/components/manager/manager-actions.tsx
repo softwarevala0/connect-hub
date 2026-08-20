@@ -405,7 +405,7 @@ function ActionDialog({
             type="button"
             size="sm"
             variant={spec.destructive && phase !== "success" ? "destructive" : "default"}
-            loading={busy}
+            disabled={busy}
             onClick={onPrimary}
           >
             {phase === "success" ? "Done"
