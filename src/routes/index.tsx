@@ -1282,7 +1282,7 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
           {feedbackCount > 0 ? (
             <button onClick={resetFeedback} className="font-mono text-[13px] text-[oklch(0.84_0.14_248)] hover:underline">Reset</button>
           ) : (
-            <button className="font-mono text-[13px] text-[oklch(0.84_0.14_248)] hover:underline">Re-scan</button>
+            <button onClick={() => { toast.success("Re-scan complete — recommendations refreshed."); }} className="font-mono text-[13px] font-bold text-[oklch(0.84_0.14_248)] hover:underline">Re-scan</button>
           )}
         </div>
         {suggestions.length === 0 ? (
@@ -1309,8 +1309,10 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
                 <div className="mt-0.5 text-[15px] font-semibold text-[oklch(0.985_0.01_255)]">{s.title}</div>
                 <div className="mt-0.5 text-[14px] leading-relaxed text-[oklch(0.93_0.03_250)]">{s.body}</div>
                 <div className="mt-1.5 flex items-center gap-1.5">
-                  <button className="inline-flex h-6 items-center gap-1 rounded-md bg-[oklch(0.72_0.168_265)] px-2 text-[13.5px] font-semibold text-white hover:brightness-110">
-                    <Zap className="h-2.5 w-2.5" aria-hidden="true" /> {s.action}
+                  <button
+                    onClick={() => { runAction({ label: s.action, title: `${s.action}: ${s.title}`, module: "AI Recommendations", action: `ai.recommendation.${s.action.toLowerCase()}`, description: s.body, submitLabel: s.action, confirm: `Apply "${s.title}" to ${s.impact}?`, onSubmit: () => { dismiss(s.id); return s.title; } }); }}
+                    className="btn3d btn3d-hover inline-flex h-7 items-center gap-1 rounded-lg px-2.5 text-[13.5px] font-bold text-white">
+                    <Zap className="h-3 w-3" aria-hidden="true" /> {s.action}
                   </button>
                   <button
                     onClick={() => dismiss(s.id)}
@@ -1880,6 +1882,7 @@ function Callout({ title, children }: { title: string; children: React.ReactNode
   );
 }
 function Table({ headers, note, loading }: { headers: string[]; note?: string; loading?: boolean }) {
+  const { run: runTableAction } = useManagerActions();
   return (
     <div className="overflow-hidden glass3d rounded-xl">
       <table className="w-full">
@@ -1918,15 +1921,15 @@ function Table({ headers, note, loading }: { headers: string[]; note?: string; l
                     <div className="mt-1 text-[14.5px] text-[oklch(0.84_0.05_248)]">Populate this grid by connecting your enterprise registry, importing a baseline CSV, or seeding a starter template.</div>
                   </div>
                   <div className="mt-1 flex flex-wrap items-center justify-center gap-1.5">
-                    <button className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-gradient-to-b from-[oklch(0.72_0.189_265)] to-[oklch(0.68_0.184_270)] px-3 text-[14.5px] font-semibold text-white shadow-[0_2px_6px_-1px_oklch(0.68_0.184_270/0.5)] hover:brightness-110">
-                      <PlugZap className="h-3.5 w-3.5" /> Connect registry
-                    </button>
-                    <button className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[14.5px] font-semibold text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)]">
-                      <Upload className="h-3.5 w-3.5" /> Import CSV
-                    </button>
-                    <button className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[14.5px] font-semibold text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)]">
-                      <Layers className="h-3.5 w-3.5" /> Use starter template
-                    </button>
+                    <Button size="sm" onClick={() => runTableAction(resolveActionSpec("Add integration", "Registry"))}>
+                      <PlugZap className="h-4 w-4" /> Connect registry
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => runTableAction({ label: "Import CSV", module: "Registry", action: "registry.import", description: "Import a baseline CSV into this grid.", submitLabel: "Import", fields: [{ name: "file", label: "File name", required: true, placeholder: "baseline.csv" }, { name: "mode", label: "Mode", type: "select", options: ["Merge", "Replace"], required: true }] })}>
+                      <Upload className="h-4 w-4" /> Import CSV
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => runTableAction({ label: "Use starter template", module: "Registry", action: "registry.template.apply", description: "Seed this grid from a starter template.", submitLabel: "Apply template", fields: [{ name: "template", label: "Template", type: "select", required: true, options: ["Support baseline", "Delivery baseline", "Finance baseline"] }] })}>
+                      <Layers className="h-4 w-4" /> Use starter template
+                    </Button>
                   </div>
                   <div className="mt-1 flex items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-2.5 py-1.5 text-[13.5px] text-[oklch(0.84_0.05_248)]">
                     <BookOpen className="h-3 w-3" /> Read the <a href="#" className="font-semibold text-[oklch(0.84_0.14_248)] hover:underline">setup guide</a> · 2 min
