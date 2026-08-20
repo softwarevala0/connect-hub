@@ -79,17 +79,17 @@ const dotCls: Record<TimelineTone, string> = {
 
 export function ActivityTimeline() {
   return (
-    <section className="rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.09)] md:p-6">
+    <section className="card3d card-tone-emerald p-5 shadow-[0_1px_2px_rgba(0,0,0,0.09)] md:p-6">
       <header className="mb-4 flex flex-wrap items-center gap-2">
-        <Activity className="h-4 w-4 text-[oklch(0.72_0.168_265)]" />
-        <h3 className="text-[15px] font-bold tracking-tight text-[oklch(0.965_0.012_285)]">Recent Activity</h3>
-        <span className="rounded-full border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-2 py-0.5 text-[11.5px] font-semibold text-[oklch(0.72_0.02_285)]">
+        <Activity className="h-4 w-4 text-[oklch(0.84_0.14_252)]" />
+        <h3 className="text-[15px] font-bold tracking-tight text-[oklch(0.985_0.01_255)]">Recent Activity</h3>
+        <span className="rounded-full border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-2 py-0.5 text-[13px] font-semibold text-[oklch(0.84_0.05_248)]">
           Control-plane changes
         </span>
         <Button
           type="button" variant="ghost" size="sm"
           onClick={() => requestSection("audit")}
-          className="ml-auto min-h-9 rounded-lg px-2 text-[12.5px] font-semibold text-[oklch(0.72_0.168_265)] hover:bg-[oklch(0.185_0.02_285)] hover:text-[oklch(0.68_0.184_268)]"
+          className="ml-auto min-h-9 rounded-lg px-2 text-[14px] font-semibold text-[oklch(0.84_0.14_252)] hover:bg-[oklch(0.185_0.02_285)] hover:text-[oklch(0.68_0.184_268)]"
         >
           View full audit trail
         </Button>
@@ -99,9 +99,9 @@ export function ActivityTimeline() {
           <li key={t.title} className="group relative">
             <span className={`absolute -left-5 top-1.5 h-2.5 w-2.5 rounded-full ring-4 transition-transform group-hover:scale-125 ${dotCls[t.tone]}`} />
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 rounded-lg px-2 py-1 transition-colors hover:bg-[oklch(0.185_0.02_285)]">
-              <span className="text-[14px] font-semibold text-[oklch(0.965_0.012_285)]">{t.title}</span>
-              <span className="text-[12.5px] text-[oklch(0.72_0.02_285)]">{t.meta}</span>
-              <span className="ml-auto inline-flex items-center gap-1 font-mono text-[12px] text-[oklch(0.72_0.02_285)]">
+              <span className="text-[15.5px] font-semibold text-[oklch(0.985_0.01_255)]">{t.title}</span>
+              <span className="text-[14px] text-[oklch(0.84_0.05_248)]">{t.meta}</span>
+              <span className="ml-auto inline-flex items-center gap-1 font-mono text-[13.5px] text-[oklch(0.84_0.05_248)]">
                 <Clock className="h-2.5 w-2.5" /> {t.time}
               </span>
             </div>
@@ -127,9 +127,9 @@ const MODULES: {
 ];
 
 const statusCls: Record<string, string> = {
-  Enabled: "border-[oklch(0.38_0.1_155)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.1725_155)]",
+  Enabled: "border-[oklch(0.38_0.1_155)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.19_158)]",
   Restricted: "border-[oklch(0.3_0.088_85)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.72_0.147_75)]",
-  Disabled: "border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.72_0.02_285)]",
+  Disabled: "border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.05_248)]",
 };
 
 export function ModuleControlGrid() {
@@ -139,38 +139,38 @@ export function ModuleControlGrid() {
       {MODULES.map((m) => (
         <article
           key={m.code}
-          className="group rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] p-4 shadow-[0_1px_2px_rgba(0,0,0,0.07)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[oklch(0.45_0.025_285)] hover:shadow-[0_14px_30px_-18px_rgba(0,0,0,0.62)]"
+          className="group card3d card-tone-amber p-4 shadow-[0_1px_2px_rgba(0,0,0,0.07)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[oklch(0.45_0.025_285)] hover:shadow-[0_14px_30px_-18px_rgba(0,0,0,0.62)]"
         >
           <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.72_0.168_265)]">
+            <span className="grid h-9 w-9 shrink-0 place-items-center glass3d rounded-xl text-[oklch(0.84_0.14_252)]">
               <Boxes className="h-4 w-4" />
             </span>
             <div className="min-w-0">
               <div className="flex min-w-0 items-center gap-2">
-                <h4 className="truncate text-[14.5px] font-bold text-[oklch(0.965_0.012_285)]">{m.name}</h4>
-                <span className="shrink-0 rounded-md bg-[oklch(0.185_0.02_285)] px-1.5 py-0.5 font-mono text-[11px] font-bold text-[oklch(0.72_0.02_285)]">{m.code}</span>
+                <h4 className="truncate text-[16px] font-bold text-[oklch(0.985_0.01_255)]">{m.name}</h4>
+                <span className="shrink-0 rounded-md bg-[oklch(0.185_0.02_285)] px-1.5 py-0.5 font-mono text-[12.5px] font-bold text-[oklch(0.84_0.05_248)]">{m.code}</span>
               </div>
-              <p className="mt-0.5 line-clamp-2 text-[13px] leading-relaxed text-[oklch(0.72_0.02_285)]">{m.desc}</p>
+              <p className="mt-0.5 line-clamp-2 text-[14.5px] leading-relaxed text-[oklch(0.84_0.05_248)]">{m.desc}</p>
             </div>
-            <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[11.5px] font-bold ${statusCls[m.status]}`}>{m.status}</span>
+            <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[13px] font-bold ${statusCls[m.status]}`}>{m.status}</span>
           </div>
 
-          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-[oklch(0.185_0.02_285)] pt-3 text-[12.5px]">
-            <div className="flex items-center gap-1.5 text-[oklch(0.72_0.02_285)]">
+          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 border-t border-[oklch(0.185_0.02_285)] pt-3 text-[14px]">
+            <div className="flex items-center gap-1.5 text-[oklch(0.84_0.05_248)]">
               <ShieldCheck className="h-3 w-3" /> <dt className="sr-only">Visibility</dt>
-              <dd className="truncate text-[oklch(0.86_0.02_285)]">{m.visibility}</dd>
+              <dd className="truncate text-[oklch(0.93_0.03_250)]">{m.visibility}</dd>
             </div>
-            <div className="flex items-center gap-1.5 text-[oklch(0.72_0.02_285)]">
+            <div className="flex items-center gap-1.5 text-[oklch(0.84_0.05_248)]">
               <CircleDot className="h-3 w-3" /> <dt className="sr-only">Assigned roles</dt>
-              <dd className="text-[oklch(0.86_0.02_285)]">{m.roles} roles assigned</dd>
+              <dd className="text-[oklch(0.93_0.03_250)]">{m.roles} roles assigned</dd>
             </div>
-            <div className="flex items-center gap-1.5 text-[oklch(0.72_0.02_285)]">
+            <div className="flex items-center gap-1.5 text-[oklch(0.84_0.05_248)]">
               <GitBranch className="h-3 w-3" /> <dt className="sr-only">Dependencies</dt>
-              <dd className="truncate text-[oklch(0.86_0.02_285)]">{m.linked.join(" · ")}</dd>
+              <dd className="truncate text-[oklch(0.93_0.03_250)]">{m.linked.join(" · ")}</dd>
             </div>
-            <div className="flex items-center gap-1.5 text-[oklch(0.72_0.02_285)]">
+            <div className="flex items-center gap-1.5 text-[oklch(0.84_0.05_248)]">
               <Clock className="h-3 w-3" /> <dt className="sr-only">Last updated</dt>
-              <dd className="text-[oklch(0.86_0.02_285)]">Updated {m.updated}</dd>
+              <dd className="text-[oklch(0.93_0.03_250)]">Updated {m.updated}</dd>
             </div>
           </dl>
 
@@ -181,12 +181,12 @@ export function ModuleControlGrid() {
                 style={{ width: `${m.health}%` }}
               />
             </div>
-            <span className="shrink-0 font-mono text-[12px] font-bold text-[oklch(0.68_0.1725_155)]">{m.health}% health</span>
+            <span className="shrink-0 font-mono text-[13.5px] font-bold text-[oklch(0.86_0.19_158)]">{m.health}% health</span>
             <Button
               type="button" variant="ghost" size="sm"
               aria-label={`Configure ${m.name} module`}
               onClick={() => run(moduleConfigSpec(m))}
-              className="min-h-9 shrink-0 gap-1 rounded-lg border border-[oklch(0.27_0.025_285)] px-2 text-[12px] font-semibold text-[oklch(0.86_0.02_285)] opacity-100 transition-all hover:bg-[oklch(0.185_0.02_285)] focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100"
+              className="min-h-9 shrink-0 gap-1 rounded-lg border border-[oklch(0.27_0.025_285)] px-2 text-[13.5px] font-semibold text-[oklch(0.93_0.03_250)] opacity-100 transition-all hover:bg-[oklch(0.185_0.02_285)] focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100"
             >
               <Link2 className="h-3 w-3" /> Configure
             </Button>

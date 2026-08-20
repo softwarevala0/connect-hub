@@ -143,7 +143,7 @@ export const ACTION_SPECS: Record<string, ActionSpec> = {
     detail: (
       <div className="flex flex-col gap-1.5">
         <p>Execution history is rendered from the automation center state in this build.</p>
-        <p className="text-[oklch(0.72_0.02_285)]">
+        <p className="text-[oklch(0.84_0.05_248)]">
           No run store is connected, so only the runs already listed in the section are available.
           Connect the automation service to page through the full history.
         </p>
