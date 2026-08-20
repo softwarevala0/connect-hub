@@ -266,25 +266,65 @@ function ChatManagerShell() {
 /* ─────────── Global Header ─────────── */
 
 function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void; onOpenNav: () => void }) {
+  const [lang, setLang] = useState("English");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [syncing, setSyncing] = useState(false);
+  const [syncedAt, setSyncedAt] = useState<string | null>(null);
+  const [notes, setNotes] = useState([
+    { id: "n1", title: "SLA breach — AMS P0 queue", time: "2m ago", read: false },
+    { id: "n2", title: "Retention policy awaiting approval", time: "18m ago", read: false },
+    { id: "n3", title: "New device enrolled · Priya Nair", time: "1h ago", read: false },
+  ]);
+  const unread = notes.filter((n) => !n.read).length;
+
+  useEffect(() => {
+    const stored = typeof window !== "undefined" ? localStorage.getItem("cm.lang") : null;
+    if (stored) setLang(stored);
+  }, []);
+
+  function pickLang(l: string) {
+    setLang(l);
+    try { localStorage.setItem("cm.lang", l); } catch { /* noop */ }
+    document.documentElement.setAttribute("lang", LANGS[l] ?? "en");
+  }
+
+  function toggleTheme() {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    document.documentElement.classList.toggle("dark", next === "dark");
+  }
+
+  async function runSync() {
+    setSyncing(true);
+    await new Promise((r) => setTimeout(r, 900));
+    setSyncing(false);
+    setSyncedAt(new Date().toLocaleTimeString());
+  }
+
   return (
-    <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-3 border-b border-[oklch(0.27_0.025_285)] bg-[oklch(0.17_0.025_285)]/92 px-4 backdrop-blur-xl md:px-6">
-      <div className="flex items-center gap-2.5">
-        <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[oklch(0.68_0.138_265)] to-[oklch(0.68_0.161_275)] font-black text-white shadow-[0_4px_12px_-2px_oklch(0.68_0.138_265/0.4)]">
-          SV
-        </div>
-        <div className="hidden flex-col leading-tight md:flex">
+    <header className="glass3d sticky top-0 z-40 flex h-16 shrink-0 items-center gap-3 rounded-none px-3 md:px-5">
+      <button
+        type="button"
+        onClick={onOpenNav}
+        aria-label="Open navigation"
+        className="btn3d btn3d-hover grid h-10 w-10 shrink-0 place-items-center rounded-xl lg:hidden"
+      >
+        <LayoutGrid className="h-4.5 w-4.5" />
+      </button>
+
+      <div className="flex min-w-0 items-center gap-2.5">
+        <div className="hidden min-w-0 flex-col leading-tight md:flex">
           <div className="flex items-center gap-1.5">
-            <span className="text-[14.5px] font-bold tracking-tight">Software Vala</span>
-            <ChevronRight className="h-3 w-3 text-[oklch(0.45_0.025_285)]" />
-            <span className="text-[14.5px] font-semibold text-[oklch(0.68_0.161_265)]">Chat Manager</span>
+            <span className="cm-heading truncate text-[18px]">Software Vala</span>
+            <ChevronRight className="h-3.5 w-3.5 text-[oklch(0.7_0.07_250)]" />
+            <span className="truncate text-[16px] font-bold text-[oklch(0.86_0.11_243)]">Chat Manager</span>
           </div>
-          <span className="font-mono text-[11.5px] text-[oklch(0.72_0.02_285)]">Enterprise Control Center · WS-SV-PRIME</span>
+          <span className="truncate font-mono text-[12.5px] font-semibold text-[oklch(0.82_0.05_248)]">Enterprise Control Center · WS-SV-PRIME</span>
         </div>
-        <span className="ml-2 hidden items-center gap-1 rounded-full border border-[oklch(0.38_0.12_155)] bg-[oklch(0.185_0.02_285)] px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[oklch(0.68_0.1725_155)] lg:inline-flex">
-          <CircleDot className="h-2.5 w-2.5" /> Production
+        <span className="ml-1 hidden items-center gap-1 rounded-full border border-[oklch(0.5_0.15_155)] bg-[oklch(0.32_0.1_158)] px-2.5 py-1 text-[12px] font-extrabold uppercase tracking-wider text-[oklch(0.88_0.17_158)] lg:inline-flex">
+          <CircleDot className="h-3 w-3" /> Production
         </span>
         <PermissionBadge role="Workspace Owner" compact />
-
       </div>
 
       <div className="ml-auto flex items-center gap-1.5">
@@ -292,66 +332,200 @@ function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void;
           type="button"
           onClick={onOpenPalette}
           aria-label="Open command palette"
-          className="relative hidden h-9 w-[280px] items-center rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] pl-9 pr-16 text-left text-[13.5px] text-[oklch(0.72_0.02_285)] outline-none transition-all hover:border-[oklch(0.45_0.025_285)] hover:bg-[oklch(0.205_0.028_285)] focus-visible:border-[oklch(0.72_0.168_265)] focus-visible:ring-4 focus-visible:ring-[oklch(0.72_0.168_265)]/15 md:flex xl:w-[340px]"
+          className="glass3d relative hidden h-10 w-[260px] items-center rounded-xl pl-9 pr-16 text-left text-[14px] font-medium text-[oklch(0.88_0.04_250)] transition-transform hover:-translate-y-px md:flex xl:w-[330px]"
         >
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[oklch(0.72_0.02_285)]" />
-          Search policies, rules, users, modules…
-          <kbd className="absolute right-2 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-md border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1.5 py-0.5 text-[11.5px] font-medium text-[oklch(0.72_0.02_285)]">
-            <Command className="h-2.5 w-2.5" /> K
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[oklch(0.85_0.09_240)]" />
+          Search policies, rules, users…
+          <kbd className="absolute right-2 top-1/2 inline-flex -translate-y-1/2 items-center gap-0.5 rounded-md border border-[oklch(1_0_0/0.18)] bg-[oklch(1_0_0/0.08)] px-1.5 py-0.5 text-[12px] font-bold">
+            <Command className="h-3 w-3" /> K
           </kbd>
         </button>
 
-        <GhostIcon label="AI Assistant" tone="accent"><Sparkles className="h-4 w-4" /></GhostIcon>
-        <GhostIcon label="Sync status"><RefreshCw className="h-4 w-4" /></GhostIcon>
-        <GhostIcon label="Notifications" badge="3"><Bell className="h-4 w-4" /></GhostIcon>
-        <GhostIcon label="Help"><HelpCircle className="h-4 w-4" /></GhostIcon>
-        <GhostIcon label="Language"><Languages className="h-4 w-4" /></GhostIcon>
-        <GhostIcon label="Theme"><Sun className="h-4 w-4" /></GhostIcon>
+        <HeaderMenu label="AI Assistant" tone="accent" icon={<Sparkles className="h-4.5 w-4.5" />} title="AI Assistant">
+          {(close) => (
+            <MenuList
+              items={[
+                { label: "Open command palette", hint: "⌘K", onClick: () => { close(); onOpenPalette(); } },
+                { label: "Smart Reply configuration", onClick: () => { close(); requestSection("smart-reply"); } },
+                { label: "AI health & fallbacks", onClick: () => { close(); requestSection("ai-health"); } },
+                { label: "AI usage & spend", onClick: () => { close(); requestSection("ai-usage"); } },
+              ]}
+            />
+          )}
+        </HeaderMenu>
 
-        <div className="mx-1 hidden h-6 w-px bg-[oklch(0.27_0.025_285)] sm:block" />
+        <button
+          type="button"
+          onClick={() => void runSync()}
+          aria-label={syncing ? "Syncing" : "Sync workspace configuration"}
+          title={syncedAt ? `Last synced ${syncedAt}` : "Sync now"}
+          className="btn3d btn3d-hover grid h-10 w-10 place-items-center rounded-xl"
+        >
+          <RefreshCw className={`h-4.5 w-4.5 ${syncing ? "animate-spin" : ""}`} />
+        </button>
 
-        <div className="hidden items-center gap-2 rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] py-1 pl-1 pr-2.5 sm:flex">
-          <div className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-[oklch(0.38_0.12_85)] to-[oklch(0.78_0.16_75)] text-[14.5px]">
-            👑
-          </div>
+        <HeaderMenu label="Notifications" icon={<Bell className="h-4.5 w-4.5" />} badge={unread ? String(unread) : undefined} title="Notifications">
+          {() => (
+            <div className="flex flex-col gap-1.5">
+              {notes.map((n) => (
+                <button
+                  key={n.id}
+                  type="button"
+                  onClick={() => setNotes((ns) => ns.map((x) => (x.id === n.id ? { ...x, read: true } : x)))}
+                  className={`rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-[oklch(1_0_0/0.08)] ${n.read ? "opacity-60" : ""}`}
+                >
+                  <div className="text-[14px] font-bold">{n.title}</div>
+                  <div className="text-[12.5px] font-medium text-[oklch(0.84_0.06_245)]">{n.time}{n.read ? " · read" : ""}</div>
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => setNotes((ns) => ns.map((x) => ({ ...x, read: true })))}
+                className="btn3d btn3d-hover mt-1 rounded-xl px-3 py-2 text-[13.5px] font-bold"
+              >
+                Mark all as read
+              </button>
+            </div>
+          )}
+        </HeaderMenu>
+
+        <HeaderMenu label="Help" icon={<HelpCircle className="h-4.5 w-4.5" />} title="Help & shortcuts">
+          {(close) => (
+            <MenuList
+              items={[
+                { label: "Command palette", hint: "⌘K", onClick: () => { close(); onOpenPalette(); } },
+                { label: "Audit explorer", hint: "G A", onClick: () => { close(); requestSection("audit"); } },
+                { label: "Permission matrix", onClick: () => { close(); requestSection("permissions"); } },
+                { label: "System health", onClick: () => { close(); requestSection("system"); } },
+              ]}
+            />
+          )}
+        </HeaderMenu>
+
+        <HeaderMenu label={`Language — ${lang}`} icon={<Languages className="h-4.5 w-4.5" />} title="Language">
+          {(close) => (
+            <MenuList
+              items={Object.keys(LANGS).map((l) => ({
+                label: l,
+                hint: lang === l ? "Active" : undefined,
+                onClick: () => { pickLang(l); close(); },
+              }))}
+            />
+          )}
+        </HeaderMenu>
+
+        <button
+          type="button"
+          onClick={toggleTheme}
+          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          aria-pressed={theme === "light"}
+          className="btn3d btn3d-hover grid h-10 w-10 place-items-center rounded-xl"
+        >
+          {theme === "dark" ? <Sun className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+        </button>
+
+        <div className="glass3d ml-1 hidden items-center gap-2 rounded-xl py-1 pl-1 pr-2.5 sm:flex">
+          <div className="icon3d h-8 w-8 text-[15px]">👑</div>
           <div className="flex flex-col leading-tight">
-            <span className="font-mono text-[12.5px] font-bold">BOSS-000001</span>
-            <span className="text-[11px] text-[oklch(0.72_0.02_285)]">Workspace Owner</span>
+            <span className="font-mono text-[13.5px] font-extrabold">BOSS-000001</span>
+            <span className="text-[12px] font-semibold text-[oklch(0.84_0.06_245)]">Workspace Owner</span>
           </div>
         </div>
 
         <Link
           to="/"
           title="Return to Communication Hub"
-          className="ml-1 hidden items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-2.5 py-1.5 text-[12.5px] font-semibold text-[oklch(0.86_0.02_285)] transition-all hover:bg-[oklch(0.185_0.02_285)] md:inline-flex"
+          className="btn3d btn3d-hover ml-1 hidden items-center gap-1.5 rounded-xl px-3 py-2 text-[13.5px] font-bold md:inline-flex"
         >
-          <Home className="h-3.5 w-3.5" /> Hub
+          <Home className="h-4 w-4" /> Hub
         </Link>
       </div>
     </header>
   );
 }
 
-function GhostIcon({
-  children, label, badge, tone,
-}: { children: React.ReactNode; label: string; badge?: string; tone?: "accent" }) {
+const LANGS: Record<string, string> = {
+  English: "en",
+  हिन्दी: "hi",
+  मराठी: "mr",
+  ગુજરાતી: "gu",
+  Español: "es",
+  Deutsch: "de",
+};
+
+function MenuList({ items }: { items: { label: string; hint?: string; onClick: () => void }[] }) {
   return (
-    <button
-      title={label}
-      aria-label={label}
-      className={`relative grid h-9 w-9 place-items-center rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 active:scale-95 ${
-        tone === "accent"
-          ? "text-[oklch(0.68_0.161_265)] hover:bg-[oklch(0.185_0.02_285)]"
-          : "text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.185_0.02_285)] hover:text-[oklch(0.965_0.012_285)]"
-      }`}
-    >
-      {children}
-      {badge && (
-        <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-[16px] place-items-center rounded-full bg-[oklch(0.72_0.19_25)] px-1 text-[10.5px] font-bold text-white ring-2 ring-[oklch(0.2_0.03_285)]">
-          {badge}
-        </span>
+    <div className="flex flex-col gap-1">
+      {items.map((it) => (
+        <button
+          key={it.label}
+          type="button"
+          onClick={it.onClick}
+          className="flex min-h-10 items-center gap-2 rounded-xl px-2.5 py-2 text-left text-[14px] font-bold transition-colors hover:bg-[oklch(1_0_0/0.1)]"
+        >
+          <span className="flex-1 truncate">{it.label}</span>
+          {it.hint && <span className="font-mono text-[12px] font-bold text-[oklch(0.85_0.09_240)]">{it.hint}</span>}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function HeaderMenu({
+  label, icon, badge, tone, title, children,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  badge?: string;
+  tone?: "accent";
+  title: string;
+  children: (close: () => void) => React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        title={label}
+        aria-label={label}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className={`btn3d btn3d-hover relative grid h-10 w-10 place-items-center rounded-xl ${tone === "accent" ? "text-[oklch(0.92_0.14_205)]" : ""}`}
+      >
+        {icon}
+        {badge && (
+          <span className="absolute -right-1 -top-1 grid h-5 min-w-[20px] place-items-center rounded-full bg-[oklch(0.65_0.22_25)] px-1 text-[11.5px] font-extrabold text-white shadow-[0_2px_6px_rgba(0,0,0,0.5)]">
+            {badge}
+          </span>
+        )}
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className="glass3d absolute right-0 top-[calc(100%+10px)] z-50 w-[290px] animate-fade-in rounded-2xl p-2.5"
+        >
+          <div className="px-1.5 pb-2 text-[12px] font-extrabold uppercase tracking-[0.14em] text-[oklch(0.85_0.09_240)]">{title}</div>
+          {children(() => setOpen(false))}
+        </div>
       )}
-    </button>
+    </div>
   );
 }
 
