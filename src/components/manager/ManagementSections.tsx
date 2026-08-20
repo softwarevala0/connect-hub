@@ -14,171 +14,14 @@ export type ManagementSectionId =
   | "ai-providers" | "ai-models" | "ai-usage" | "ai-limits" | "ai-health"
   | "incidents";
 
-/* ─────────── Local themed primitives (match existing design system) ─────────── */
+/* ─────────── Shared primitives (extracted to keep this file section-only) ─────────── */
 
-const CARD = "rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] shadow-[0_1px_2px_rgba(0,0,0,0.09)]";
-const MUTED = "text-[oklch(0.72_0.02_285)]";
-const FG = "text-[oklch(0.965_0.012_285)]";
+import { Bar, Block, DataTable, MiniStats, Pill } from "./manager-ui";
+import { RoleAssignmentPanel } from "./RoleAssignment";
 
-type Tone = "emerald" | "amber" | "rose" | "indigo" | "slate";
+export { Bar, DataTable, MiniStats, Pill } from "./manager-ui";
+export { PermissionMatrixGrid } from "./PermissionMatrix";
 
-const toneCls: Record<Tone, string> = {
-  emerald: "border-[oklch(0.38_0.1_155)] text-[oklch(0.72_0.1725_155)] bg-[oklch(0.185_0.02_285)]",
-  amber: "border-[oklch(0.34_0.09_85)] text-[oklch(0.78_0.147_75)] bg-[oklch(0.185_0.02_285)]",
-  rose: "border-[oklch(0.36_0.11_20)] text-[oklch(0.74_0.16_20)] bg-[oklch(0.185_0.02_285)]",
-  indigo: "border-[oklch(0.38_0.08_265)] text-[oklch(0.72_0.168_265)] bg-[oklch(0.185_0.02_285)]",
-  slate: "border-[oklch(0.27_0.025_285)] text-[oklch(0.86_0.02_285)] bg-[oklch(0.185_0.02_285)]",
-};
-
-export function Pill({ children, tone = "slate" }: { children: React.ReactNode; tone?: Tone }) {
-  return (
-    <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2 py-0.5 text-[12px] font-bold ${toneCls[tone]}`}>
-      {children}
-    </span>
-  );
-}
-
-export function DataTable({
-  headers, rows, note,
-}: { headers: string[]; rows: React.ReactNode[][]; note?: string }) {
-  return (
-    <div className={`overflow-hidden ${CARD}`}>
-      <div className="scrollbar-thin overflow-x-auto">
-        <table className="w-full min-w-[720px] border-collapse">
-          <thead className="bg-[oklch(0.185_0.02_285)]">
-            <tr>
-              {headers.map((h) => (
-                <th key={h} className={`px-3 py-2.5 text-left text-[12px] font-bold uppercase tracking-wider ${MUTED}`}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r, i) => (
-              <tr key={i} className={`transition-colors hover:bg-[oklch(0.185_0.02_285)] ${i > 0 ? "border-t border-[oklch(0.185_0.02_285)]" : ""}`}>
-                {r.map((c, j) => (
-                  <td key={j} className={`px-3 py-2.5 text-[13.5px] ${j === 0 ? `font-semibold ${FG}` : "text-[oklch(0.86_0.02_285)]"}`}>{c}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {note && <div className={`border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[12.5px] ${MUTED}`}>{note}</div>}
-    </div>
-  );
-}
-
-export function MiniStats({ items }: { items: { label: string; value: string; hint?: string; tone?: Tone; icon?: typeof Users }[] }) {
-  return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      {items.map((s) => {
-        const Icon = s.icon ?? CircleDot;
-        return (
-          <div key={s.label} className={`${CARD} p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-18px_rgba(0,0,0,0.6)]`}>
-            <div className="flex items-center gap-2">
-              <span className={`grid h-7 w-7 place-items-center rounded-lg border ${toneCls[s.tone ?? "indigo"]}`}>
-                <Icon className="h-3.5 w-3.5" />
-              </span>
-              <span className={`text-[12px] font-bold uppercase tracking-wider ${MUTED}`}>{s.label}</span>
-            </div>
-            <div className={`mt-2 font-mono text-[21px] font-bold ${FG}`}>{s.value}</div>
-            {s.hint && <div className={`mt-0.5 text-[12px] ${MUTED}`}>{s.hint}</div>}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-export function Bar({ value, tone = "indigo" }: { value: number; tone?: Tone }) {
-  const color =
-    tone === "emerald" ? "bg-[oklch(0.78_0.16_155)]"
-    : tone === "amber" ? "bg-[oklch(0.78_0.16_75)]"
-    : tone === "rose" ? "bg-[oklch(0.7_0.19_20)]"
-    : "bg-[oklch(0.72_0.168_265)]";
-  return (
-    <div className="flex items-center gap-2">
-      <div className="h-1.5 min-w-[72px] flex-1 overflow-hidden rounded-full bg-[oklch(0.185_0.02_285)]">
-        <span className={`block h-full rounded-full ${color} transition-[width] duration-700`} style={{ width: `${Math.min(100, value)}%` }} />
-      </div>
-      <span className="shrink-0 font-mono text-[12px] font-bold text-[oklch(0.86_0.02_285)]">{value}%</span>
-    </div>
-  );
-}
-
-function Block({ title, icon: Icon, children, action }: { title: string; icon: typeof Users; children: React.ReactNode; action?: string }) {
-  return (
-    <section className={`${CARD} p-4 md:p-5`}>
-      <header className="mb-3 flex flex-wrap items-center gap-2">
-        <span className="grid h-7 w-7 place-items-center rounded-lg border border-[oklch(0.38_0.08_265)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.72_0.168_265)]">
-          <Icon className="h-3.5 w-3.5" />
-        </span>
-        <h3 className={`text-[15px] font-bold tracking-tight ${FG}`}>{title}</h3>
-        {action && (
-          <button className="ml-auto rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-2.5 py-1 text-[12.5px] font-semibold text-[oklch(0.68_0.161_265)] transition-colors hover:bg-[oklch(0.22_0.03_285)]">
-            {action}
-          </button>
-        )}
-      </header>
-      <div className="flex flex-col gap-3">{children}</div>
-    </section>
-  );
-}
-
-/* ─────────── Permission matrix (Role × Module × Action) ─────────── */
-
-const PM_ROLES = ["Admin", "Manager", "Dev Lead", "Support", "Sales", "Client"] as const;
-const PM_MODULES = ["Conversations", "Channels", "Policies", "Automation", "Integrations", "Analytics"] as const;
-const PM_ACTIONS = ["Read", "Create", "Update", "Delete", "Approve"] as const;
-
-const PM_LEVEL: Record<string, number> = {
-  Admin: 5, Manager: 4, "Dev Lead": 3, Support: 3, Sales: 2, Client: 1,
-};
-const PM_WEIGHT: Record<string, number> = { Read: 1, Create: 2, Update: 3, Delete: 5, Approve: 4 };
-const PM_MOD_WEIGHT: Record<string, number> = {
-  Conversations: 0, Channels: 1, Policies: 2, Automation: 1, Integrations: 2, Analytics: 0,
-};
-
-export function PermissionMatrixGrid() {
-  return (
-    <div className={`overflow-hidden ${CARD}`}>
-      <div className="scrollbar-thin overflow-x-auto">
-        <table className="w-full min-w-[900px] border-collapse">
-          <thead className="bg-[oklch(0.185_0.02_285)]">
-            <tr>
-              <th className={`sticky left-0 z-10 bg-[oklch(0.185_0.02_285)] px-3 py-2.5 text-left text-[12px] font-bold uppercase tracking-wider ${MUTED}`}>Role × Module</th>
-              {PM_ACTIONS.map((a) => (
-                <th key={a} className={`px-3 py-2.5 text-center text-[12px] font-bold uppercase tracking-wider ${MUTED}`}>{a}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {PM_ROLES.flatMap((role) =>
-              PM_MODULES.map((mod) => (
-                <tr key={`${role}-${mod}`} className="border-t border-[oklch(0.185_0.02_285)] hover:bg-[oklch(0.185_0.02_285)]">
-                  <td className={`sticky left-0 z-10 bg-[oklch(0.205_0.028_285)] px-3 py-2 text-[13.5px] font-semibold ${FG}`}>
-                    {role} <span className={MUTED}>· {mod}</span>
-                  </td>
-                  {PM_ACTIONS.map((a) => {
-                    const allowed = (PM_LEVEL[role] ?? 0) >= (PM_WEIGHT[a] ?? 0) + (PM_MOD_WEIGHT[mod] ?? 0);
-                    return (
-                      <td key={a} className="px-3 py-2 text-center">
-                        <Pill tone={allowed ? "emerald" : "slate"}>{allowed ? "Allow" : "Deny"}</Pill>
-                      </td>
-                    );
-                  })}
-                </tr>
-              )),
-            )}
-          </tbody>
-        </table>
-      </div>
-      <div className={`border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[12.5px] ${MUTED}`}>
-        Effective permissions are computed per role, module and action. Management-side only — never exposed in the user dashboard.
-      </div>
-    </div>
-  );
-}
 
 /* ─────────── Section bodies ─────────── */
 
@@ -598,6 +441,7 @@ export function ManagementSection({ id }: { id: ManagementSectionId }) {
               note="Access reviews are due quarterly. Roles past 90 days are flagged as stale access."
             />
           </Block>
+          <RoleAssignmentPanel />
         </>
       );
     case "config-versions":
@@ -831,39 +675,6 @@ export function AnalyticsCenter() {
   );
 }
 
-export function AuditExplorer() {
-  return (
-    <>
-      <div className={`${CARD} p-3.5`}>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex min-w-[240px] flex-1 items-center gap-2 rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2">
-            <Search className={`h-4 w-4 ${MUTED}`} />
-            <input
-              className={`w-full bg-transparent text-[13.5px] outline-none placeholder:text-[oklch(0.6_0.02_285)] ${FG}`}
-              placeholder="Search audit ledger — actor, action, entity, IP, request id…"
-              aria-label="Search audit ledger"
-            />
-          </div>
-          {["Actor", "Action", "Module", "Severity", "Date range"].map((f) => (
-            <button key={f} className="rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[13px] font-semibold text-[oklch(0.86_0.02_285)] transition-colors hover:bg-[oklch(0.22_0.03_285)]">
-              {f}
-            </button>
-          ))}
-        </div>
-      </div>
-      <Block title="Audit Timeline" icon={ShieldAlert} action="Export ledger">
-        <DataTable
-          headers={["Time", "Actor", "Action", "Entity", "Before → After", "Severity"]}
-          rows={[
-            ["22:34 IST", "Rahul Mehta · Admin", "policy.update", "Escalation Rules", "15m → 10m", <Pill tone="amber">Medium</Pill>],
-            ["22:12 IST", "Priya Nair · Manager", "channel.owner.change", "#support-escalations", "Vikram Rao → Priya Nair", <Pill tone="slate">Low</Pill>],
-            ["21:58 IST", "System", "automation.fail", "Offboard cleanup", "success → failed (502)", <Pill tone="rose">High</Pill>],
-            ["21:30 IST", "Arjun Shah · Dev Lead", "ai.model.canary", "translate-lite", "off → canary", <Pill tone="amber">Medium</Pill>],
-            ["20:44 IST", "Rahul Mehta · Admin", "role.grant", "2 users", "Member → Manager", <Pill tone="rose">High</Pill>],
-          ]}
-          note="The audit ledger is append-only and tamper-evident. Before/after values are captured for every configuration change."
-        />
-      </Block>
-    </>
-  );
-}
+/** Audit explorer now lives in ./AuditExplorer with working filters. */
+export { AuditExplorer } from "./AuditExplorer";
+

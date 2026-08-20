@@ -22,6 +22,7 @@ import {
   ManagementSection, SystemHealthCenter, IntegrationHub, AnalyticsCenter,
   AuditExplorer, PermissionMatrixGrid, type ManagementSectionId,
 } from "@/components/manager/ManagementSections";
+import { ManagerActionProvider, requestSection } from "@/components/manager/manager-actions";
 
 
 function AnalyticsAccessNotice() {
@@ -151,6 +152,14 @@ const NAV: NavGroup[] = [
 const ALL_ITEMS = NAV.flatMap((g) => g.items.map((i) => ({ ...i, group: g.label })));
 
 function ChatManagerPage() {
+  return (
+    <ManagerActionProvider>
+      <ChatManagerShell />
+    </ManagerActionProvider>
+  );
+}
+
+function ChatManagerShell() {
   const [active, setActive] = useState<SectionId>("workspace");
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [recent, setRecent] = useLocalList("cm.recent", ["security-policy", "roles"]);
@@ -162,6 +171,9 @@ function ChatManagerPage() {
     setActive(id);
     setRecent([id, ...recent.filter((r) => r !== id)].slice(0, 5));
   };
+  const selectSectionRef = useRef(selectSection);
+  selectSectionRef.current = selectSection;
+
   const togglePin = (id: string) => {
     setPinned(pinned.includes(id) ? pinned.filter((p) => p !== id) : [id, ...pinned].slice(0, 6));
   };
@@ -178,6 +190,16 @@ function ChatManagerPage() {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Cross-component navigation requests (e.g. "View full audit trail").
+  useEffect(() => {
+    function onNavigate(e: Event) {
+      const id = (e as CustomEvent<string>).detail as SectionId;
+      if (ALL_ITEMS.some((i) => i.id === id)) selectSectionRef.current(id);
+    }
+    window.addEventListener("cm:navigate", onNavigate);
+    return () => window.removeEventListener("cm:navigate", onNavigate);
   }, []);
 
   return (
@@ -1242,7 +1264,11 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
             </li>
           ))}
         </ol>
-        <button className="mt-2 inline-flex w-full items-center justify-center gap-1 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] py-1.5 text-[12px] font-semibold text-[oklch(0.68_0.161_265)] hover:bg-[oklch(0.185_0.02_285)]">
+        <button
+          type="button"
+          onClick={() => requestSection("audit")}
+          className="mt-2 inline-flex min-h-9 w-full items-center justify-center gap-1 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] py-1.5 text-[12px] font-semibold text-[oklch(0.68_0.161_265)] transition-colors hover:bg-[oklch(0.185_0.02_285)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]"
+        >
           View full audit trail <ArrowUpRight className="h-3 w-3" />
         </button>
       </PanelCard>

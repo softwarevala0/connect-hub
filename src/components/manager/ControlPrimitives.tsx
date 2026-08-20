@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { requestSection, useManagerActions } from "./manager-actions";
+import { moduleConfigSpec } from "./action-registry";
 import {
   Boxes, ShieldCheck, Activity, CircleDot, Clock, GitBranch, Link2,
 } from "lucide-react";
@@ -83,9 +86,13 @@ export function ActivityTimeline() {
         <span className="rounded-full border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-2 py-0.5 text-[11.5px] font-semibold text-[oklch(0.72_0.02_285)]">
           Control-plane changes
         </span>
-        <button className="ml-auto text-[12.5px] font-semibold text-[oklch(0.72_0.168_265)] transition-colors hover:text-[oklch(0.68_0.184_268)]">
+        <Button
+          type="button" variant="ghost" size="sm"
+          onClick={() => requestSection("audit")}
+          className="ml-auto min-h-9 rounded-lg px-2 text-[12.5px] font-semibold text-[oklch(0.72_0.168_265)] hover:bg-[oklch(0.185_0.02_285)] hover:text-[oklch(0.68_0.184_268)]"
+        >
           View full audit trail
-        </button>
+        </Button>
       </header>
       <ol className="relative space-y-3 pl-5 before:absolute before:left-[5px] before:top-1.5 before:bottom-2 before:w-px before:bg-[oklch(0.27_0.025_285)]">
         {TIMELINE.map((t) => (
@@ -126,6 +133,7 @@ const statusCls: Record<string, string> = {
 };
 
 export function ModuleControlGrid() {
+  const { run } = useManagerActions();
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
       {MODULES.map((m) => (
@@ -174,9 +182,14 @@ export function ModuleControlGrid() {
               />
             </div>
             <span className="shrink-0 font-mono text-[12px] font-bold text-[oklch(0.68_0.1725_155)]">{m.health}% health</span>
-            <button className="shrink-0 inline-flex items-center gap-1 rounded-lg border border-[oklch(0.27_0.025_285)] px-2 py-1 text-[12px] font-semibold text-[oklch(0.86_0.02_285)] opacity-0 transition-all hover:bg-[oklch(0.185_0.02_285)] focus-visible:opacity-100 group-hover:opacity-100">
+            <Button
+              type="button" variant="ghost" size="sm"
+              aria-label={`Configure ${m.name} module`}
+              onClick={() => run(moduleConfigSpec(m))}
+              className="min-h-9 shrink-0 gap-1 rounded-lg border border-[oklch(0.27_0.025_285)] px-2 text-[12px] font-semibold text-[oklch(0.86_0.02_285)] opacity-100 transition-all hover:bg-[oklch(0.185_0.02_285)] focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100"
+            >
               <Link2 className="h-3 w-3" /> Configure
-            </button>
+            </Button>
           </div>
         </article>
       ))}
