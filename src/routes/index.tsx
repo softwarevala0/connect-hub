@@ -203,34 +203,49 @@ function ChatManagerShell() {
   }, []);
 
   return (
-    <div className="flex h-screen w-screen flex-col overflow-hidden bg-[oklch(0.185_0.02_285)] text-[oklch(0.965_0.012_285)]">
-      <GlobalHeader onOpenPalette={() => setPaletteOpen(true)} />
-      <MegaNav
-        active={active}
-        activeGroup={activeGroup.label}
-        onSelect={selectSection}
-        recent={recent}
-        pinned={pinned}
-        onTogglePin={togglePin}
-      />
-      <Breadcrumb group={activeGroup.label} label={activeItem.label} />
-
-      <div className="scrollbar-thin flex min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto grid w-full max-w-[1600px] grid-cols-1 gap-6 px-4 py-5 md:px-6 md:py-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-          <div className="flex min-w-0 flex-col gap-5">
-            <PageHeader item={activeItem} group={activeGroup.label} />
-            <KpiRow id={active} />
-            <QuickActions />
-            <div key={active} className="min-w-0 animate-fade-in rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.09),0_8px_24px_-12px_rgba(0,0,0,0.18)] md:p-6">
-              <SectionRenderer id={active} />
-            </div>
-            <ActivityTimeline />
-          </div>
-          <ContextPanel item={activeItem} />
-        </div>
+    <div className="flex h-screen w-screen overflow-hidden bg-[oklch(0.16_0.045_264)] text-[oklch(0.97_0.012_260)]">
+      {sidebarOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation"
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+        />
+      )}
+      <div className={`${sidebarOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} lg:static lg:z-auto lg:flex`}>
+        <ManagerSidebar
+          active={active}
+          onSelect={(id) => { selectSection(id); setSidebarOpen(false); }}
+          recent={recent}
+          pinned={pinned}
+          onTogglePin={togglePin}
+          collapsed={collapsed}
+          onToggleCollapse={() => setCollapsed((c) => !c)}
+        />
       </div>
 
-      <BottomStatusBar item={activeItem} group={activeGroup.label} onOpenPalette={() => setPaletteOpen(true)} />
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <GlobalHeader onOpenPalette={() => setPaletteOpen(true)} onOpenNav={() => setSidebarOpen(true)} />
+        <Breadcrumb group={activeGroup.label} label={activeItem.label} />
+
+        <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto">
+          <div className="grid w-full grid-cols-1 gap-6 px-4 py-5 md:px-6 md:py-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+            <div className="flex min-w-0 flex-col gap-5">
+              <PageHeader item={activeItem} group={activeGroup.label} />
+              <KpiRow id={active} />
+              <QuickActions />
+              <div key={active} className="card3d card-tone-blue min-w-0 animate-fade-in p-5 md:p-6">
+                <SectionRenderer id={active} />
+              </div>
+              <ActivityTimeline />
+            </div>
+            <ContextPanel item={activeItem} />
+          </div>
+        </div>
+
+        <BottomStatusBar item={activeItem} group={activeGroup.label} onOpenPalette={() => setPaletteOpen(true)} />
+      </div>
+
       {paletteOpen && (
         <CommandPalette
           active={active}
@@ -244,6 +259,7 @@ function ChatManagerShell() {
     </div>
   );
 }
+
 
 /* ─────────── Global Header ─────────── */
 
