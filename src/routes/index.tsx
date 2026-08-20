@@ -580,8 +580,8 @@ function PermissionBadge({ role, compact }: { role: string; compact?: boolean })
   const toneCls = {
     amber: "border-[oklch(0.38_0.12_85)] bg-[oklch(0.3_0.066_85)] text-[oklch(0.72_0.147_75)]",
     indigo: "border-[oklch(0.38_0.08_255)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.1495_265)]",
-    emerald: "border-[oklch(0.38_0.12_155)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.1725_155)]",
-    slate: "border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.02_285)]",
+    emerald: "border-[oklch(0.38_0.12_155)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.19_158)]",
+    slate: "border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.93_0.03_250)]",
   }[perm.color];
 
   // Close on outside click or Escape
@@ -632,25 +632,25 @@ function PermissionBadge({ role, compact }: { role: string; compact?: boolean })
           role="tooltip"
           tabIndex={-1}
           aria-live="polite"
-          className="absolute right-0 top-[calc(100%+8px)] z-50 w-[300px] animate-fade-in rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] p-3 text-left shadow-[0_20px_60px_-20px_rgba(0,0,0,0.62)]"
+          className="absolute right-0 top-[calc(100%+8px)] z-50 w-[300px] animate-fade-in glass3d rounded-xl p-3 text-left shadow-[0_20px_60px_-20px_rgba(0,0,0,0.62)]"
         >
           <div className="flex items-start gap-2 border-b border-[oklch(0.185_0.02_285)] pb-2">
-            <div className="grid h-7 w-7 place-items-center rounded-lg bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.161_265)]" aria-hidden="true">
+            <div className="grid h-7 w-7 place-items-center rounded-lg bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.14_248)]" aria-hidden="true">
               <ShieldQuestion className="h-3.5 w-3.5" />
             </div>
             <div className="min-w-0">
-              <div className="text-[15px] font-bold text-[oklch(0.965_0.012_285)]">{role}</div>
-              <div className="mt-0.5 truncate text-[13.5px] text-[oklch(0.72_0.02_285)]">{perm.scope}</div>
+              <div className="text-[15px] font-bold text-[oklch(0.985_0.01_255)]">{role}</div>
+              <div className="mt-0.5 truncate text-[13.5px] text-[oklch(0.84_0.05_248)]">{perm.scope}</div>
             </div>
           </div>
           <div className="mt-2 space-y-2">
             <div role="group" aria-labelledby={`${tooltipId}-allow`}>
-              <div id={`${tooltipId}-allow`} className="mb-1 flex items-center gap-1 text-[12.5px] font-bold uppercase tracking-wider text-[oklch(0.68_0.1725_155)]">
+              <div id={`${tooltipId}-allow`} className="mb-1 flex items-center gap-1 text-[12.5px] font-bold uppercase tracking-wider text-[oklch(0.86_0.19_158)]">
                 <Check className="h-2.5 w-2.5" aria-hidden="true" /> Allowed
               </div>
               <ul className="space-y-0.5">
                 {perm.allow.map((a) => (
-                  <li key={a} className="flex items-start gap-1.5 text-[14px] text-[oklch(0.965_0.012_285)]">
+                  <li key={a} className="flex items-start gap-1.5 text-[14px] text-[oklch(0.985_0.01_255)]">
                     <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[oklch(0.72_0.1575_155)]" aria-hidden="true" />
                     {a}
                   </li>
@@ -663,7 +663,7 @@ function PermissionBadge({ role, compact }: { role: string; compact?: boolean })
               </div>
               <ul className="space-y-0.5">
                 {perm.deny.map((d) => (
-                  <li key={d} className="flex items-start gap-1.5 text-[14px] text-[oklch(0.86_0.02_285)]">
+                  <li key={d} className="flex items-start gap-1.5 text-[14px] text-[oklch(0.93_0.03_250)]">
                     <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[oklch(0.78_0.16_25)]" aria-hidden="true" />
                     {d}
                   </li>
@@ -671,7 +671,7 @@ function PermissionBadge({ role, compact }: { role: string; compact?: boolean })
               </ul>
             </div>
           </div>
-          <div className="mt-2 flex items-center justify-between border-t border-[oklch(0.185_0.02_285)] pt-2 font-mono text-[13px] text-[oklch(0.72_0.02_285)]">
+          <div className="mt-2 flex items-center justify-between border-t border-[oklch(0.185_0.02_285)] pt-2 font-mono text-[13px] text-[oklch(0.84_0.05_248)]">
             <span>Policy v14.2.1 · Esc to close</span>
             <span className="inline-flex items-center gap-1"><Lock className="h-2.5 w-2.5" aria-hidden="true" /> Enforced</span>
           </div>
@@ -910,14 +910,14 @@ function SidebarLink({
 function Breadcrumb({ group, label }: { group: string; label: string }) {
   return (
     <div className="border-b border-[oklch(0.185_0.02_285)] bg-[oklch(0.24_0.035_285)]/60">
-      <div className="mx-auto flex max-w-[1600px] items-center gap-1.5 px-4 py-2 font-mono text-[13.5px] text-[oklch(0.72_0.02_285)] md:px-6">
-        <Link to="/" className="hover:text-[oklch(0.68_0.161_265)]">Home</Link>
+      <div className="mx-auto flex max-w-[1600px] items-center gap-1.5 px-4 py-2 font-mono text-[13.5px] text-[oklch(0.84_0.05_248)] md:px-6">
+        <Link to="/" className="hover:text-[oklch(0.84_0.14_248)]">Home</Link>
         <ChevronRight className="h-3 w-3" />
         <span>Chat Manager</span>
         <ChevronRight className="h-3 w-3" />
         <span>{group}</span>
         <ChevronRight className="h-3 w-3" />
-        <span className="font-bold text-[oklch(0.965_0.012_285)]">{label}</span>
+        <span className="font-bold text-[oklch(0.985_0.01_255)]">{label}</span>
         <span className="ml-auto hidden items-center gap-2 sm:flex">
           <Lock className="h-3 w-3 text-[oklch(0.72_0.1575_155)]" />
           Immutable Policy Store
@@ -935,23 +935,23 @@ function PageHeader({ item, group }: { item: (typeof ALL_ITEMS)[number]; group: 
     <div className="rounded-2xl border border-[oklch(0.27_0.025_285)] bg-gradient-to-br from-[oklch(0.245_0.035_290)] to-[oklch(0.185_0.02_285)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.09)] md:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[oklch(0.185_0.02_285)] to-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.161_265)] ring-1 ring-[oklch(0.27_0.025_285)]">
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[oklch(0.185_0.02_285)] to-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.14_248)] ring-1 ring-[oklch(0.27_0.025_285)]">
             <Icon className="h-5 w-5" />
           </div>
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-[21.5px] font-bold tracking-tight text-[oklch(0.965_0.012_285)]">{item.label}</h1>
+              <h1 className="text-[21.5px] font-bold tracking-tight text-[oklch(0.985_0.01_255)]">{item.label}</h1>
               <Chip tone="indigo">{group}</Chip>
               <PermissionBadge role="Admin" />
               <Chip tone="slate"><CircleDot className="h-2.5 w-2.5" /> Active</Chip>
             </div>
-            <p className="mt-1.5 max-w-2xl text-[15.5px] leading-relaxed text-[oklch(0.72_0.02_285)]">
+            <p className="mt-1.5 max-w-2xl text-[15.5px] leading-relaxed text-[oklch(0.84_0.05_248)]">
               {item.hint ?? "Enterprise control managed exclusively from the Chat Manager. Changes are versioned, approved and audited."}
             </p>
-            <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[13.5px] text-[oklch(0.72_0.02_285)]">
-              <span>Owner · <b className="text-[oklch(0.965_0.012_285)]">Compliance Office</b></span>
-              <span>Updated · <b className="text-[oklch(0.965_0.012_285)]">Today · 09:42 IST</b></span>
-              <span>Version · <b className="text-[oklch(0.965_0.012_285)]">v14.2.1</b></span>
+            <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[13.5px] text-[oklch(0.84_0.05_248)]">
+              <span>Owner · <b className="text-[oklch(0.985_0.01_255)]">Compliance Office</b></span>
+              <span>Updated · <b className="text-[oklch(0.985_0.01_255)]">Today · 09:42 IST</b></span>
+              <span>Version · <b className="text-[oklch(0.985_0.01_255)]">v14.2.1</b></span>
             </div>
           </div>
         </div>
@@ -962,9 +962,9 @@ function PageHeader({ item, group }: { item: (typeof ALL_ITEMS)[number]; group: 
 
 function Chip({ children, tone }: { children: React.ReactNode; tone: "indigo" | "emerald" | "slate" | "amber" }) {
   const cls = {
-    indigo: "border-[oklch(0.38_0.08_265)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.161_265)]",
-    emerald: "border-[oklch(0.38_0.12_155)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.1725_155)]",
-    slate: "border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.02_285)]",
+    indigo: "border-[oklch(0.38_0.08_265)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.14_248)]",
+    emerald: "border-[oklch(0.38_0.12_155)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.19_158)]",
+    slate: "border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.93_0.03_250)]",
     amber: "border-[oklch(0.38_0.12_85)] bg-[oklch(0.3_0.066_85)] text-[oklch(0.72_0.147_75)]",
   }[tone];
   return (
@@ -990,17 +990,17 @@ function KpiRow({ id: _id }: { id: SectionId }) {
         const deltaCls = k.delta.startsWith("-")
           ? "text-[oklch(0.72_0.189_25)] bg-[oklch(0.185_0.02_285)] border-[oklch(0.38_0.08_25)]"
           : k.delta === "0"
-          ? "text-[oklch(0.72_0.02_285)] bg-[oklch(0.185_0.02_285)] border-[oklch(0.27_0.025_285)]"
-          : "text-[oklch(0.68_0.1725_155)] bg-[oklch(0.185_0.02_285)] border-[oklch(0.38_0.12_155)]";
+          ? "text-[oklch(0.84_0.05_248)] bg-[oklch(0.185_0.02_285)] border-[oklch(0.27_0.025_285)]"
+          : "text-[oklch(0.86_0.19_158)] bg-[oklch(0.185_0.02_285)] border-[oklch(0.38_0.12_155)]";
         return (
           <div key={k.label} className="group rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.2_0.03_285)]/85 p-4 shadow-[0_1px_2px_rgba(0,0,0,0.07)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[oklch(0.27_0.025_285)] hover:shadow-[0_14px_30px_-16px_rgba(0,0,0,0.44)]">
             <div className="flex items-center justify-between">
-              <span className="text-[13px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">{k.label}</span>
+              <span className="text-[13px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">{k.label}</span>
               <Chip tone={k.tone}><Icon className="h-2.5 w-2.5" /></Chip>
             </div>
             <div className="mt-2 flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <div className="font-mono text-[25.5px] font-bold tabular-nums leading-none text-[oklch(0.965_0.012_285)]">
+                <div className="font-mono text-[25.5px] font-bold tabular-nums leading-none text-[oklch(0.985_0.01_255)]">
                   <AnimatedNumber value={k.value} />
                 </div>
                 <span className={`mt-1.5 inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 font-mono text-[12.5px] font-bold ${deltaCls}`}>
@@ -1027,7 +1027,7 @@ function KpiRow({ id: _id }: { id: SectionId }) {
                 );
               })}
             </div>
-            <div className="mt-1.5 text-[13.5px] text-[oklch(0.72_0.02_285)]">{k.hint}</div>
+            <div className="mt-1.5 text-[13.5px] text-[oklch(0.84_0.05_248)]">{k.hint}</div>
           </div>
         );
       })}
@@ -1055,7 +1055,7 @@ function QuickActions() {
     { label: "More", icon: MoreHorizontal },
   ];
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] p-2.5 shadow-[0_1px_2px_rgba(0,0,0,0.07)]">
+    <div className="flex flex-wrap items-center gap-2 card3d card-tone-blue p-2.5 shadow-[0_1px_2px_rgba(0,0,0,0.07)]">
       <div className="flex flex-wrap items-center gap-1.5">
         {primary.map((b) => {
           const Icon = b.icon;
@@ -1066,7 +1066,7 @@ function QuickActions() {
               className={`inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[14.5px] font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 active:scale-95 ${
                 isPrimary
                   ? "bg-gradient-to-b from-[oklch(0.72_0.189_265)] to-[oklch(0.68_0.184_270)] text-white shadow-[0_2px_6px_-1px_oklch(0.68_0.184_270/0.5)] hover:brightness-110"
-                  : "border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.185_0.02_285)]"
+                  : "border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)]"
               }`}
             >
               <Icon className="h-3.5 w-3.5" /> {b.label}
@@ -1083,7 +1083,7 @@ function QuickActions() {
               key={b.label}
               title={b.label}
               aria-label={b.label}
-              className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2 text-[14px] font-medium text-[oklch(0.86_0.02_285)] transition-all hover:bg-[oklch(0.185_0.02_285)] hover:text-[oklch(0.965_0.012_285)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40"
+              className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2 text-[14px] font-medium text-[oklch(0.93_0.03_250)] transition-all hover:bg-[oklch(0.185_0.02_285)] hover:text-[oklch(0.985_0.01_255)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40"
             >
               <Icon className="h-3.5 w-3.5" />
               <span className="hidden md:inline">{b.label}</span>
@@ -1091,7 +1091,7 @@ function QuickActions() {
           );
         })}
       </div>
-      <div className="ml-auto flex items-center gap-2 text-[13.5px] text-[oklch(0.72_0.02_285)]">
+      <div className="ml-auto flex items-center gap-2 text-[13.5px] text-[oklch(0.84_0.05_248)]">
         <CircleDot className="h-2.5 w-2.5 text-[oklch(0.72_0.1575_155)]" />
         All changes saved
       </div>
@@ -1193,20 +1193,20 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
     <aside className="flex flex-col gap-3 xl:sticky xl:top-[7.5rem] xl:h-fit">
       {/* AI Recommendations */}
       <PanelCard title="AI Recommendations" icon={Sparkles} tone="indigo">
-        <div className="mb-2 flex items-center justify-between text-[13.5px] text-[oklch(0.72_0.02_285)]">
+        <div className="mb-2 flex items-center justify-between text-[13.5px] text-[oklch(0.84_0.05_248)]">
           <span className="inline-flex items-center gap-1">
-            <TrendingUp className="h-3 w-3 text-[oklch(0.68_0.1725_155)]" aria-hidden="true" />
+            <TrendingUp className="h-3 w-3 text-[oklch(0.86_0.19_158)]" aria-hidden="true" />
             {suggestions.length} actions · refined by {feedbackCount} rating{feedbackCount === 1 ? "" : "s"}
           </span>
           {feedbackCount > 0 ? (
-            <button onClick={resetFeedback} className="font-mono text-[13px] text-[oklch(0.68_0.161_265)] hover:underline">Reset</button>
+            <button onClick={resetFeedback} className="font-mono text-[13px] text-[oklch(0.84_0.14_248)] hover:underline">Reset</button>
           ) : (
-            <button className="font-mono text-[13px] text-[oklch(0.68_0.161_265)] hover:underline">Re-scan</button>
+            <button className="font-mono text-[13px] text-[oklch(0.84_0.14_248)] hover:underline">Re-scan</button>
           )}
         </div>
         {suggestions.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-3 py-4 text-center text-[14px] text-[oklch(0.72_0.02_285)]">
-            No open suggestions. <button onClick={resetFeedback} className="font-semibold text-[oklch(0.68_0.161_265)] hover:underline">Restore all</button>
+          <div className="rounded-lg border border-dashed border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-3 py-4 text-center text-[14px] text-[oklch(0.84_0.05_248)]">
+            No open suggestions. <button onClick={resetFeedback} className="font-semibold text-[oklch(0.84_0.14_248)] hover:underline">Restore all</button>
           </div>
         ) : (
         <ul className="flex flex-col gap-2">
@@ -1217,23 +1217,23 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
               ? "border-l-[oklch(0.78_0.16_75)] bg-[oklch(0.185_0.02_285)]"
               : "border-l-[oklch(0.72_0.168_265)] bg-[oklch(0.185_0.02_285)]";
             const sevLabel = s.sev === "high" ? "HIGH" : s.sev === "med" ? "MED" : "LOW";
-            const sevText = s.sev === "high" ? "text-[oklch(0.72_0.189_25)]" : s.sev === "med" ? "text-[oklch(0.72_0.168_75)]" : "text-[oklch(0.68_0.161_265)]";
+            const sevText = s.sev === "high" ? "text-[oklch(0.72_0.189_25)]" : s.sev === "med" ? "text-[oklch(0.72_0.168_75)]" : "text-[oklch(0.84_0.14_248)]";
             const rated = feedback[s.id];
             return (
               <li key={s.id} className={`rounded-lg border border-[oklch(0.185_0.02_285)] border-l-2 p-2 ${sevCls}`}>
                 <div className="flex items-center justify-between">
                   <span className={`font-mono text-[12px] font-bold ${sevText}`}>{sevLabel}</span>
-                  <span className="font-mono text-[12.5px] text-[oklch(0.72_0.02_285)]">{s.impact}</span>
+                  <span className="font-mono text-[12.5px] text-[oklch(0.84_0.05_248)]">{s.impact}</span>
                 </div>
-                <div className="mt-0.5 text-[15px] font-semibold text-[oklch(0.965_0.012_285)]">{s.title}</div>
-                <div className="mt-0.5 text-[14px] leading-relaxed text-[oklch(0.86_0.02_285)]">{s.body}</div>
+                <div className="mt-0.5 text-[15px] font-semibold text-[oklch(0.985_0.01_255)]">{s.title}</div>
+                <div className="mt-0.5 text-[14px] leading-relaxed text-[oklch(0.93_0.03_250)]">{s.body}</div>
                 <div className="mt-1.5 flex items-center gap-1.5">
                   <button className="inline-flex h-6 items-center gap-1 rounded-md bg-[oklch(0.72_0.168_265)] px-2 text-[13.5px] font-semibold text-white hover:brightness-110">
                     <Zap className="h-2.5 w-2.5" aria-hidden="true" /> {s.action}
                   </button>
                   <button
                     onClick={() => dismiss(s.id)}
-                    className="inline-flex h-6 items-center rounded-md border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-2 text-[13.5px] font-semibold text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.185_0.02_285)]"
+                    className="inline-flex h-6 items-center rounded-md border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-2 text-[13.5px] font-semibold text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)]"
                   >
                     Dismiss
                   </button>
@@ -1245,8 +1245,8 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
                       title="Helpful — show more like this"
                       className={`grid h-6 w-6 place-items-center rounded-md border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
                         rated === "up"
-                          ? "border-[oklch(0.72_0.1575_155)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.1725_155)]"
-                          : "border-[oklch(0.185_0.02_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.72_0.02_285)] hover:border-[oklch(0.38_0.12_155)] hover:text-[oklch(0.68_0.1725_155)]"
+                          ? "border-[oklch(0.72_0.1575_155)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.19_158)]"
+                          : "border-[oklch(0.185_0.02_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.84_0.05_248)] hover:border-[oklch(0.38_0.12_155)] hover:text-[oklch(0.86_0.19_158)]"
                       }`}
                     >
                       <ThumbsUp className={`h-3 w-3 ${rated === "up" ? "fill-current" : ""}`} />
@@ -1259,7 +1259,7 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
                       className={`grid h-6 w-6 place-items-center rounded-md border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
                         rated === "down"
                           ? "border-[oklch(0.78_0.16_25)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.72_0.189_25)]"
-                          : "border-[oklch(0.185_0.02_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.72_0.02_285)] hover:border-[oklch(0.38_0.12_25)] hover:text-[oklch(0.72_0.189_25)]"
+                          : "border-[oklch(0.185_0.02_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.84_0.05_248)] hover:border-[oklch(0.38_0.12_25)] hover:text-[oklch(0.72_0.189_25)]"
                       }`}
                     >
                       <ThumbsDown className={`h-3 w-3 ${rated === "down" ? "fill-current" : ""}`} />
@@ -1267,8 +1267,8 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
                   </div>
                 </div>
                 {rated && (
-                  <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[oklch(0.24_0.035_285)]/70 px-2 py-0.5 font-mono text-[12.5px] text-[oklch(0.72_0.02_285)]">
-                    <Sparkle className="h-2.5 w-2.5 text-[oklch(0.68_0.161_265)]" aria-hidden="true" />
+                  <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-[oklch(0.24_0.035_285)]/70 px-2 py-0.5 font-mono text-[12.5px] text-[oklch(0.84_0.05_248)]">
+                    <Sparkle className="h-2.5 w-2.5 text-[oklch(0.84_0.14_248)]" aria-hidden="true" />
                     {rated === "up" ? "Boosted similar suggestions" : "Suppressed similar suggestions"}
                   </div>
                 )}
@@ -1286,25 +1286,25 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
           {([
             ["critical", "Critical", warnings.critical, "text-[oklch(0.72_0.189_25)]", "bg-[oklch(0.78_0.2_25)]"],
             ["warning", "Warning", warnings.warning, "text-[oklch(0.72_0.168_75)]", "bg-[oklch(0.78_0.16_75)]"],
-            ["info", "Info", warnings.info, "text-[oklch(0.68_0.161_265)]", "bg-[oklch(0.72_0.168_265)]"],
+            ["info", "Info", warnings.info, "text-[oklch(0.84_0.14_248)]", "bg-[oklch(0.72_0.168_265)]"],
           ] as const).map(([key, label, list, tx, bg]) => (
             <div key={key}>
               <div className={`mb-1 flex items-center gap-1.5 text-[12.5px] font-bold uppercase tracking-wider ${tx}`}>
                 <span className={`h-1.5 w-1.5 rounded-full ${bg}`} />
                 {label}
-                <span className="rounded-full bg-[oklch(0.185_0.02_285)] px-1.5 text-[12px] text-[oklch(0.72_0.02_285)]">{list.length}</span>
+                <span className="rounded-full bg-[oklch(0.185_0.02_285)] px-1.5 text-[12px] text-[oklch(0.84_0.05_248)]">{list.length}</span>
               </div>
               {list.length === 0 ? (
-                <div className="rounded-md border border-dashed border-[oklch(0.27_0.025_285)] px-2 py-1.5 text-[13.5px] text-[oklch(0.72_0.02_285)]">All clear.</div>
+                <div className="rounded-md border border-dashed border-[oklch(0.27_0.025_285)] px-2 py-1.5 text-[13.5px] text-[oklch(0.84_0.05_248)]">All clear.</div>
               ) : (
                 <ul className="flex flex-col gap-1">
                   {list.map((w) => (
                     <li key={w.title} className="rounded-md bg-[oklch(0.185_0.02_285)] px-2 py-1.5">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="truncate text-[14.5px] font-semibold text-[oklch(0.965_0.012_285)]">{w.title}</span>
-                        <span className="shrink-0 font-mono text-[12.5px] text-[oklch(0.72_0.02_285)]">{w.ts}</span>
+                        <span className="truncate text-[14.5px] font-semibold text-[oklch(0.985_0.01_255)]">{w.title}</span>
+                        <span className="shrink-0 font-mono text-[12.5px] text-[oklch(0.84_0.05_248)]">{w.ts}</span>
                       </div>
-                      <div className="mt-0.5 text-[13.5px] text-[oklch(0.72_0.02_285)]">{w.body}</div>
+                      <div className="mt-0.5 text-[13.5px] text-[oklch(0.84_0.05_248)]">{w.body}</div>
                     </li>
                   ))}
                 </ul>
@@ -1324,19 +1324,19 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
               </span>
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
-                  <div className="truncate text-[14.5px] font-semibold text-[oklch(0.965_0.012_285)]">{e.a} <span className="text-[oklch(0.72_0.02_285)]">· {e.role}</span></div>
-                  <div className="truncate text-[13.5px] text-[oklch(0.72_0.02_285)]">{e.d}</div>
+                  <div className="truncate text-[14.5px] font-semibold text-[oklch(0.985_0.01_255)]">{e.a} <span className="text-[oklch(0.84_0.05_248)]">· {e.role}</span></div>
+                  <div className="truncate text-[13.5px] text-[oklch(0.84_0.05_248)]">{e.d}</div>
                 </div>
-                <span className="shrink-0 font-mono text-[12.5px] text-[oklch(0.72_0.02_285)]">{e.t}</span>
+                <span className="shrink-0 font-mono text-[12.5px] text-[oklch(0.84_0.05_248)]">{e.t}</span>
               </div>
-              <span className="mt-1 inline-block rounded-full border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1.5 py-0.5 font-mono text-[12px] uppercase tracking-wider text-[oklch(0.86_0.02_285)]">{e.tag}</span>
+              <span className="mt-1 inline-block rounded-full border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1.5 py-0.5 font-mono text-[12px] uppercase tracking-wider text-[oklch(0.93_0.03_250)]">{e.tag}</span>
             </li>
           ))}
         </ol>
         <button
           type="button"
           onClick={() => requestSection("audit")}
-          className="mt-2 inline-flex min-h-9 w-full items-center justify-center gap-1 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] py-1.5 text-[13.5px] font-semibold text-[oklch(0.68_0.161_265)] transition-colors hover:bg-[oklch(0.185_0.02_285)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]"
+          className="mt-2 inline-flex min-h-9 w-full items-center justify-center gap-1 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] py-1.5 text-[13.5px] font-semibold text-[oklch(0.84_0.14_248)] transition-colors hover:bg-[oklch(0.185_0.02_285)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]"
         >
           View full audit trail <ArrowUpRight className="h-3 w-3" />
         </button>
@@ -1358,8 +1358,8 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
             ["Preview", "⌘ P"], ["History", "⌘ H"], ["Help", "?"],
           ].map(([k, s]) => (
             <div key={k} className="flex items-center justify-between rounded-lg bg-[oklch(0.185_0.02_285)] px-2 py-1">
-              <span className="text-[oklch(0.86_0.02_285)]">{k}</span>
-              <kbd className="rounded border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1.5 py-0.5 font-mono text-[13px] font-semibold text-[oklch(0.965_0.012_285)]">{s}</kbd>
+              <span className="text-[oklch(0.93_0.03_250)]">{k}</span>
+              <kbd className="rounded border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1.5 py-0.5 font-mono text-[13px] font-semibold text-[oklch(0.985_0.01_255)]">{s}</kbd>
             </div>
           ))}
         </div>
@@ -1372,12 +1372,12 @@ function PanelCard({
   title, icon: Icon, children, tone,
 }: { title: string; icon: typeof Settings; children: React.ReactNode; tone?: "indigo" }) {
   return (
-    <div className="rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] p-4 shadow-[0_1px_2px_rgba(0,0,0,0.07)]">
+    <div className="card3d card-tone-violet p-4 shadow-[0_1px_2px_rgba(0,0,0,0.07)]">
       <div className="mb-2.5 flex items-center gap-2">
-        <div className={`grid h-6 w-6 place-items-center rounded-md ${tone === "indigo" ? "bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.161_265)]" : "bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.02_285)]"}`}>
+        <div className={`grid h-6 w-6 place-items-center rounded-md ${tone === "indigo" ? "bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.14_248)]" : "bg-[oklch(0.185_0.02_285)] text-[oklch(0.93_0.03_250)]"}`}>
           <Icon className="h-3 w-3" />
         </div>
-        <div className="text-[14px] font-bold uppercase tracking-wider text-[oklch(0.86_0.02_285)]">{title}</div>
+        <div className="text-[14px] font-bold uppercase tracking-wider text-[oklch(0.93_0.03_250)]">{title}</div>
       </div>
       {children}
     </div>
@@ -1386,7 +1386,7 @@ function PanelCard({
 function DocLink({ children }: { children: React.ReactNode }) {
   return (
     <li>
-      <a className="flex items-center justify-between rounded-md px-2 py-1 text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.185_0.02_285)] hover:text-[oklch(0.68_0.161_265)]" href="#">
+      <a className="flex items-center justify-between rounded-md px-2 py-1 text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)] hover:text-[oklch(0.84_0.14_248)]" href="#">
         <span className="truncate">{children}</span>
         <ChevronRight className="h-3 w-3 opacity-60" />
       </a>
@@ -1396,8 +1396,8 @@ function DocLink({ children }: { children: React.ReactNode }) {
 function Row({ k, v }: { k: string; v: string }) {
   return (
     <div className="flex items-center justify-between gap-3 border-b border-[oklch(0.185_0.02_285)] py-1 last:border-b-0">
-      <span className="text-[oklch(0.72_0.02_285)]">{k}</span>
-      <span className="truncate font-semibold text-[oklch(0.965_0.012_285)]">{v}</span>
+      <span className="text-[oklch(0.84_0.05_248)]">{k}</span>
+      <span className="truncate font-semibold text-[oklch(0.985_0.01_255)]">{v}</span>
     </div>
   );
 }
@@ -1724,8 +1724,8 @@ function Section({ title, desc, children }: { title: string; desc: string; child
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h2 className="text-[17.5px] font-bold tracking-tight text-[oklch(0.965_0.012_285)]">{title}</h2>
-        <p className="mt-1 max-w-2xl text-[15px] leading-relaxed text-[oklch(0.72_0.02_285)]">{desc}</p>
+        <h2 className="text-[17.5px] font-bold tracking-tight text-[oklch(0.985_0.01_255)]">{title}</h2>
+        <p className="mt-1 max-w-2xl text-[15px] leading-relaxed text-[oklch(0.84_0.05_248)]">{desc}</p>
       </div>
       <div className="flex flex-col gap-4">{children}</div>
     </div>
@@ -1737,7 +1737,7 @@ function Grid({ children }: { children: React.ReactNode }) {
 function Field({ label, placeholder, mono, value, locked }: { label: string; placeholder?: string; mono?: boolean; value?: string; locked?: boolean }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="flex items-center gap-1.5 text-[13.5px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">
+      <span className="flex items-center gap-1.5 text-[13.5px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">
         {label}
         {locked && <Lock className="h-3 w-3 text-[oklch(0.72_0.1575_155)]" aria-label="Policy locked" />}
       </span>
@@ -1745,20 +1745,20 @@ function Field({ label, placeholder, mono, value, locked }: { label: string; pla
         readOnly={locked}
         defaultValue={value}
         placeholder={placeholder}
-        className={`h-9 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[15px] text-[oklch(0.965_0.012_285)] outline-none transition-all placeholder:text-[oklch(0.45_0.025_285)] focus:border-[oklch(0.72_0.168_265)] focus:ring-4 focus:ring-[oklch(0.72_0.168_265)]/10 ${mono ? "font-mono" : ""} ${locked ? "cursor-not-allowed bg-[oklch(0.185_0.02_285)] text-[oklch(0.72_0.02_285)]" : ""}`}
+        className={`h-9 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[15px] text-[oklch(0.985_0.01_255)] outline-none transition-all placeholder:text-[oklch(0.45_0.025_285)] focus:border-[oklch(0.72_0.168_265)] focus:ring-4 focus:ring-[oklch(0.72_0.168_265)]/10 ${mono ? "font-mono" : ""} ${locked ? "cursor-not-allowed bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.05_248)]" : ""}`}
       />
     </label>
   );
 }
 function Toggles({ items }: { items: [string, boolean, boolean?][] }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)]">
+    <div className="overflow-hidden glass3d rounded-xl">
       {items.map(([label, on, locked], i) => (
         <div key={label} className={`flex items-center justify-between gap-4 px-4 py-3 ${i > 0 ? "border-t border-[oklch(0.185_0.02_285)]" : ""}`}>
           <div className="flex min-w-0 items-center gap-2">
-            <span className="truncate text-[15px] text-[oklch(0.965_0.012_285)]">{label}</span>
+            <span className="truncate text-[15px] text-[oklch(0.985_0.01_255)]">{label}</span>
             {locked && (
-              <span className="inline-flex items-center gap-1 rounded-full border border-[oklch(0.38_0.12_155)] bg-[oklch(0.185_0.02_285)] px-1.5 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[oklch(0.68_0.1725_155)]">
+              <span className="inline-flex items-center gap-1 rounded-full border border-[oklch(0.38_0.12_155)] bg-[oklch(0.185_0.02_285)] px-1.5 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[oklch(0.86_0.19_158)]">
                 <Lock className="h-2.5 w-2.5" /> Locked
               </span>
             )}
@@ -1788,24 +1788,24 @@ function ToggleSwitch({ defaultOn, disabled }: { defaultOn: boolean; disabled?: 
 function Callout({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start gap-3 rounded-xl border border-[oklch(0.27_0.025_285)] bg-gradient-to-br from-[oklch(0.185_0.02_285)] to-[oklch(0.2_0.03_285)] p-4">
-      <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.161_265)]">
+      <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.14_248)]">
         <Lock className="h-4 w-4" />
       </div>
       <div>
-        <div className="text-[15.5px] font-bold text-[oklch(0.965_0.012_285)]">{title}</div>
-        <p className="mt-1 text-[14.5px] leading-relaxed text-[oklch(0.86_0.02_285)]">{children}</p>
+        <div className="text-[15.5px] font-bold text-[oklch(0.985_0.01_255)]">{title}</div>
+        <p className="mt-1 text-[14.5px] leading-relaxed text-[oklch(0.93_0.03_250)]">{children}</p>
       </div>
     </div>
   );
 }
 function Table({ headers, note, loading }: { headers: string[]; note?: string; loading?: boolean }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)]">
+    <div className="overflow-hidden glass3d rounded-xl">
       <table className="w-full">
         <thead className="bg-[oklch(0.185_0.02_285)]">
           <tr>
             {headers.map((h) => (
-              <th key={h} className="px-3 py-2.5 text-left text-[13px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">{h}</th>
+              <th key={h} className="px-3 py-2.5 text-left text-[13px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">{h}</th>
             ))}
           </tr>
         </thead>
@@ -1822,10 +1822,10 @@ function Table({ headers, note, loading }: { headers: string[]; note?: string; l
             ))
           ) : (
             <tr>
-              <td colSpan={headers.length} className="px-3 py-14 text-center text-[14.5px] text-[oklch(0.72_0.02_285)]">
+              <td colSpan={headers.length} className="px-3 py-14 text-center text-[14.5px] text-[oklch(0.84_0.05_248)]">
                 <div className="mx-auto flex max-w-md flex-col items-center gap-3">
                   <div className="relative">
-                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[oklch(0.185_0.02_285)] to-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.161_265)] ring-1 ring-[oklch(0.38_0.06_265)] shadow-[0_8px_24px_-12px_oklch(0.68_0.184_270/0.4)]">
+                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[oklch(0.185_0.02_285)] to-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.14_248)] ring-1 ring-[oklch(0.38_0.06_265)] shadow-[0_8px_24px_-12px_oklch(0.68_0.184_270/0.4)]">
                       <Database className="h-5 w-5" />
                     </div>
                     <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-[oklch(0.205_0.028_285)] text-[oklch(0.72_0.1575_155)] ring-1 ring-[oklch(0.38_0.12_155)]">
@@ -1833,22 +1833,22 @@ function Table({ headers, note, loading }: { headers: string[]; note?: string; l
                     </span>
                   </div>
                   <div>
-                    <div className="text-[16px] font-bold text-[oklch(0.965_0.012_285)]">No records surfaced yet</div>
-                    <div className="mt-1 text-[14.5px] text-[oklch(0.72_0.02_285)]">Populate this grid by connecting your enterprise registry, importing a baseline CSV, or seeding a starter template.</div>
+                    <div className="text-[16px] font-bold text-[oklch(0.985_0.01_255)]">No records surfaced yet</div>
+                    <div className="mt-1 text-[14.5px] text-[oklch(0.84_0.05_248)]">Populate this grid by connecting your enterprise registry, importing a baseline CSV, or seeding a starter template.</div>
                   </div>
                   <div className="mt-1 flex flex-wrap items-center justify-center gap-1.5">
                     <button className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-gradient-to-b from-[oklch(0.72_0.189_265)] to-[oklch(0.68_0.184_270)] px-3 text-[14.5px] font-semibold text-white shadow-[0_2px_6px_-1px_oklch(0.68_0.184_270/0.5)] hover:brightness-110">
                       <PlugZap className="h-3.5 w-3.5" /> Connect registry
                     </button>
-                    <button className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[14.5px] font-semibold text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.185_0.02_285)]">
+                    <button className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[14.5px] font-semibold text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)]">
                       <Upload className="h-3.5 w-3.5" /> Import CSV
                     </button>
-                    <button className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[14.5px] font-semibold text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.185_0.02_285)]">
+                    <button className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[14.5px] font-semibold text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)]">
                       <Layers className="h-3.5 w-3.5" /> Use starter template
                     </button>
                   </div>
-                  <div className="mt-1 flex items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-2.5 py-1.5 text-[13.5px] text-[oklch(0.72_0.02_285)]">
-                    <BookOpen className="h-3 w-3" /> Read the <a href="#" className="font-semibold text-[oklch(0.68_0.161_265)] hover:underline">setup guide</a> · 2 min
+                  <div className="mt-1 flex items-center gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-2.5 py-1.5 text-[13.5px] text-[oklch(0.84_0.05_248)]">
+                    <BookOpen className="h-3 w-3" /> Read the <a href="#" className="font-semibold text-[oklch(0.84_0.14_248)] hover:underline">setup guide</a> · 2 min
                   </div>
                 </div>
               </td>
@@ -1857,7 +1857,7 @@ function Table({ headers, note, loading }: { headers: string[]; note?: string; l
         </tbody>
       </table>
       {note && (
-        <div className="border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[13.5px] text-[oklch(0.72_0.02_285)]">{note}</div>
+        <div className="border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[13.5px] text-[oklch(0.84_0.05_248)]">{note}</div>
       )}
     </div>
   );
@@ -1866,7 +1866,7 @@ function Chips({ items }: { items: string[] }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {items.map((t) => (
-        <span key={t} className="inline-flex items-center gap-1 rounded-full border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-2.5 py-1 font-mono text-[13.5px] font-semibold text-[oklch(0.965_0.012_285)] shadow-[0_1px_1px_rgba(0,0,0,0.07)] transition-all hover:-translate-y-0.5 hover:border-[oklch(0.38_0.08_265)] hover:text-[oklch(0.68_0.161_265)]">{t}</span>
+        <span key={t} className="inline-flex items-center gap-1 rounded-full border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-2.5 py-1 font-mono text-[13.5px] font-semibold text-[oklch(0.985_0.01_255)] shadow-[0_1px_1px_rgba(0,0,0,0.07)] transition-all hover:-translate-y-0.5 hover:border-[oklch(0.38_0.08_265)] hover:text-[oklch(0.84_0.14_248)]">{t}</span>
       ))}
     </div>
   );
@@ -1875,10 +1875,10 @@ function StatGrid({ stats }: { stats: { label: string; value: string; hint?: str
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {stats.map((s) => (
-        <div key={s.label} className="rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] p-3">
-          <div className="text-[13px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">{s.label}</div>
-          <div className="mt-1 font-mono text-[19.5px] font-bold text-[oklch(0.965_0.012_285)]">{s.value}</div>
-          {s.hint && <div className="mt-0.5 text-[13px] text-[oklch(0.72_0.02_285)]">{s.hint}</div>}
+        <div key={s.label} className="glass3d rounded-xl p-3">
+          <div className="text-[13px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">{s.label}</div>
+          <div className="mt-1 font-mono text-[19.5px] font-bold text-[oklch(0.985_0.01_255)]">{s.value}</div>
+          {s.hint && <div className="mt-0.5 text-[13px] text-[oklch(0.84_0.05_248)]">{s.hint}</div>}
         </div>
       ))}
     </div>
@@ -1915,14 +1915,14 @@ const CAPABILITIES: { key: string; label: string; defaults: Partial<Record<(type
 
 function RoleMatrix() {
   return (
-    <div className="overflow-hidden rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)]">
+    <div className="overflow-hidden glass3d rounded-xl">
       <div className="scrollbar-thin overflow-x-auto">
         <table className="w-full min-w-[880px]">
           <thead className="bg-[oklch(0.185_0.02_285)]">
             <tr>
-              <th className="sticky left-0 z-10 bg-[oklch(0.185_0.02_285)] px-3 py-2.5 text-left text-[13px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">Capability</th>
+              <th className="sticky left-0 z-10 bg-[oklch(0.185_0.02_285)] px-3 py-2.5 text-left text-[13px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">Capability</th>
               {ROLES.map((r) => (
-                <th key={r} className="px-2 py-2.5 text-center text-[13px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">
+                <th key={r} className="px-2 py-2.5 text-center text-[13px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">
                   <div className="inline-flex items-center gap-1"><Users className="h-3 w-3" /> {r}</div>
                 </th>
               ))}
@@ -1931,7 +1931,7 @@ function RoleMatrix() {
           <tbody>
             {CAPABILITIES.map((cap, i) => (
               <tr key={cap.key} className={i > 0 ? "border-t border-[oklch(0.185_0.02_285)]" : ""}>
-                <td className="sticky left-0 z-10 bg-[oklch(0.205_0.028_285)] px-3 py-2 text-[14.5px] font-semibold text-[oklch(0.965_0.012_285)]">{cap.label}</td>
+                <td className="sticky left-0 z-10 bg-[oklch(0.205_0.028_285)] px-3 py-2 text-[14.5px] font-semibold text-[oklch(0.985_0.01_255)]">{cap.label}</td>
                 {ROLES.map((r) => (
                   <td key={r} className="px-2 py-2 text-center">
                     <ToggleSwitch defaultOn={!!cap.defaults[r]} />
@@ -1942,7 +1942,7 @@ function RoleMatrix() {
           </tbody>
         </table>
       </div>
-      <div className="border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[13.5px] text-[oklch(0.72_0.02_285)]">
+      <div className="border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[13.5px] text-[oklch(0.84_0.05_248)]">
         Nothing here is exposed inside the User Dashboard. Every capability is enforced from this Chat Manager.
       </div>
     </div>
@@ -1964,15 +1964,15 @@ function BottomStatusBar({
     ? now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false })
     : "--:--";
   return (
-    <footer className="z-30 flex h-8 shrink-0 items-center gap-3 border-t border-[oklch(0.27_0.025_285)] bg-[oklch(0.17_0.025_285)]/92 px-3 font-mono text-[13.5px] text-[oklch(0.72_0.02_285)] backdrop-blur-xl md:px-5">
-      <span className="inline-flex items-center gap-1 text-[oklch(0.68_0.1725_155)]">
+    <footer className="z-30 flex h-8 shrink-0 items-center gap-3 border-t border-[oklch(0.27_0.025_285)] bg-[oklch(0.17_0.025_285)]/92 px-3 font-mono text-[13.5px] text-[oklch(0.84_0.05_248)] backdrop-blur-xl md:px-5">
+      <span className="inline-flex items-center gap-1 text-[oklch(0.86_0.19_158)]">
         <span className="h-1.5 w-1.5 rounded-full bg-[oklch(0.72_0.168_155)] shadow-[0_0_0_3px_oklch(0.38_0.12_155/0.35)]" />
         Systems Nominal
       </span>
       <Sep />
       <span className="hidden sm:inline">{group}</span>
-      <span className="hidden text-[oklch(0.86_0.02_285)] sm:inline">·</span>
-      <span className="hidden truncate text-[oklch(0.965_0.012_285)] sm:inline">{item.label}</span>
+      <span className="hidden text-[oklch(0.93_0.03_250)] sm:inline">·</span>
+      <span className="hidden truncate text-[oklch(0.985_0.01_255)] sm:inline">{item.label}</span>
       <span className="ml-auto hidden items-center gap-1 md:inline-flex">
         <Wifi className="h-3 w-3" /> 42 ms
       </span>
@@ -1987,7 +1987,7 @@ function BottomStatusBar({
       <Sep className="hidden md:inline-block" />
       <button
         onClick={onOpenPalette}
-        className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[oklch(0.68_0.161_265)] transition-colors hover:bg-[oklch(0.185_0.02_285)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40"
+        className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[oklch(0.84_0.14_248)] transition-colors hover:bg-[oklch(0.185_0.02_285)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40"
         aria-label="Open command palette"
       >
         <Command className="h-3 w-3" /> K
@@ -2068,25 +2068,25 @@ function CommandPalette({
         aria-label="Command palette"
         onMouseDown={(e) => e.stopPropagation()}
         onKeyDown={onKey}
-        className="w-full max-w-[680px] animate-fade-in overflow-hidden rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] shadow-[0_40px_100px_-30px_rgba(0,0,0,0.77)]"
+        className="w-full max-w-[680px] animate-fade-in overflow-hidden card3d card-tone-cyan shadow-[0_40px_100px_-30px_rgba(0,0,0,0.77)]"
       >
         <div className="flex items-center gap-2 border-b border-[oklch(0.185_0.02_285)] px-3.5 py-2.5">
-          <Search className="h-4 w-4 text-[oklch(0.72_0.02_285)]" />
+          <Search className="h-4 w-4 text-[oklch(0.84_0.05_248)]" />
           <input
             ref={inputRef}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Universal search · policies · roles · modules · users · fuzzy match…"
-            className="h-8 w-full bg-transparent text-[16px] text-[oklch(0.965_0.012_285)] outline-none placeholder:text-[oklch(0.45_0.025_285)]"
+            className="h-8 w-full bg-transparent text-[16px] text-[oklch(0.985_0.01_255)] outline-none placeholder:text-[oklch(0.45_0.025_285)]"
           />
-          <kbd className="hidden items-center gap-0.5 rounded-md border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-1.5 py-0.5 font-mono text-[13px] text-[oklch(0.72_0.02_285)] sm:inline-flex">
+          <kbd className="hidden items-center gap-0.5 rounded-md border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-1.5 py-0.5 font-mono text-[13px] text-[oklch(0.84_0.05_248)] sm:inline-flex">
             Esc
           </kbd>
         </div>
 
         {/* Category chips */}
         <div className="scrollbar-thin flex items-center gap-1 overflow-x-auto border-b border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2">
-          <Filter className="h-3 w-3 shrink-0 text-[oklch(0.72_0.02_285)]" />
+          <Filter className="h-3 w-3 shrink-0 text-[oklch(0.84_0.05_248)]" />
           {categories.map((c) => {
             const count = c === "All" ? ALL_ITEMS.length : ALL_ITEMS.filter((i) => i.group === c).length;
             const on = category === c;
@@ -2097,11 +2097,11 @@ function CommandPalette({
                 className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[13.5px] font-semibold transition-all ${
                   on
                     ? "border-[oklch(0.72_0.168_265)] bg-[oklch(0.72_0.168_265)] text-white"
-                    : "border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.86_0.02_285)] hover:border-[oklch(0.38_0.08_265)] hover:text-[oklch(0.68_0.161_265)]"
+                    : "border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.93_0.03_250)] hover:border-[oklch(0.38_0.08_265)] hover:text-[oklch(0.84_0.14_248)]"
                 }`}
               >
                 {c}
-                <span className={`rounded-full px-1 font-mono text-[12px] ${on ? "bg-[oklch(0.85_0.02_285)]/20" : "bg-[oklch(0.185_0.02_285)] text-[oklch(0.72_0.02_285)]"}`}>{count}</span>
+                <span className={`rounded-full px-1 font-mono text-[12px] ${on ? "bg-[oklch(0.85_0.02_285)]/20" : "bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.05_248)]"}`}>{count}</span>
               </button>
             );
           })}
@@ -2111,7 +2111,7 @@ function CommandPalette({
           {/* Pinned / Recent when empty query */}
           {pinnedItems.length > 0 && (
             <>
-              <div className="mt-1 px-2 pb-1 text-[12.5px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">Pinned</div>
+              <div className="mt-1 px-2 pb-1 text-[12.5px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">Pinned</div>
               {pinnedItems.map((it) => {
                 const Icon = it.icon;
                 return (
@@ -2120,10 +2120,10 @@ function CommandPalette({
                     onClick={() => onSelect(it.id)}
                     className="flex w-full items-center gap-3 rounded-lg px-2.5 py-1.5 text-left hover:bg-[oklch(0.185_0.02_285)]"
                   >
-                    <Pin className="h-3 w-3 fill-current text-[oklch(0.68_0.161_265)]" />
-                    <Icon className="h-3.5 w-3.5 text-[oklch(0.86_0.02_285)]" />
-                    <span className="truncate text-[15px] font-semibold text-[oklch(0.965_0.012_285)]">{it.label}</span>
-                    <span className="ml-auto truncate text-[13.5px] text-[oklch(0.72_0.02_285)]">{it.group}</span>
+                    <Pin className="h-3 w-3 fill-current text-[oklch(0.84_0.14_248)]" />
+                    <Icon className="h-3.5 w-3.5 text-[oklch(0.93_0.03_250)]" />
+                    <span className="truncate text-[15px] font-semibold text-[oklch(0.985_0.01_255)]">{it.label}</span>
+                    <span className="ml-auto truncate text-[13.5px] text-[oklch(0.84_0.05_248)]">{it.group}</span>
                   </button>
                 );
               })}
@@ -2131,7 +2131,7 @@ function CommandPalette({
           )}
           {recentItems.length > 0 && (
             <>
-              <div className="mt-2 px-2 pb-1 text-[12.5px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">Recent</div>
+              <div className="mt-2 px-2 pb-1 text-[12.5px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">Recent</div>
               {recentItems.map((it) => {
                 const Icon = it.icon;
                 return (
@@ -2140,10 +2140,10 @@ function CommandPalette({
                     onClick={() => onSelect(it.id)}
                     className="flex w-full items-center gap-3 rounded-lg px-2.5 py-1.5 text-left hover:bg-[oklch(0.185_0.02_285)]"
                   >
-                    <Clock className="h-3 w-3 text-[oklch(0.72_0.02_285)]" />
-                    <Icon className="h-3.5 w-3.5 text-[oklch(0.86_0.02_285)]" />
-                    <span className="truncate text-[15px] font-semibold text-[oklch(0.965_0.012_285)]">{it.label}</span>
-                    <span className="ml-auto truncate text-[13.5px] text-[oklch(0.72_0.02_285)]">{it.group}</span>
+                    <Clock className="h-3 w-3 text-[oklch(0.84_0.05_248)]" />
+                    <Icon className="h-3.5 w-3.5 text-[oklch(0.93_0.03_250)]" />
+                    <span className="truncate text-[15px] font-semibold text-[oklch(0.985_0.01_255)]">{it.label}</span>
+                    <span className="ml-auto truncate text-[13.5px] text-[oklch(0.84_0.05_248)]">{it.group}</span>
                   </button>
                 );
               })}
@@ -2152,14 +2152,14 @@ function CommandPalette({
           )}
 
           {(pinnedItems.length > 0 || recentItems.length > 0) && (
-            <div className="px-2 pb-1 text-[12.5px] font-bold uppercase tracking-wider text-[oklch(0.72_0.02_285)]">
+            <div className="px-2 pb-1 text-[12.5px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">
               {category === "All" ? "All Controls" : category}
             </div>
           )}
 
           {results.length === 0 ? (
-            <div className="px-4 py-10 text-center text-[15px] text-[oklch(0.72_0.02_285)]">
-              No controls match <span className="font-semibold text-[oklch(0.965_0.012_285)]">"{q}"</span>
+            <div className="px-4 py-10 text-center text-[15px] text-[oklch(0.84_0.05_248)]">
+              No controls match <span className="font-semibold text-[oklch(0.985_0.01_255)]">"{q}"</span>
               <div className="mt-2 text-[13.5px]">Try clearing the category filter or a shorter query.</div>
             </div>
           ) : (
@@ -2181,20 +2181,20 @@ function CommandPalette({
                     className="flex min-w-0 flex-1 items-center gap-3 text-left"
                   >
                     <div className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg ${
-                      selected ? "bg-[oklch(0.205_0.028_285)] text-[oklch(0.68_0.161_265)] ring-1 ring-[oklch(0.38_0.08_265)]" : "bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.02_285)]"
+                      selected ? "bg-[oklch(0.205_0.028_285)] text-[oklch(0.84_0.14_248)] ring-1 ring-[oklch(0.38_0.08_265)]" : "bg-[oklch(0.185_0.02_285)] text-[oklch(0.93_0.03_250)]"
                     }`}>
                       <Icon className="h-3.5 w-3.5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-[15.5px] font-semibold text-[oklch(0.965_0.012_285)]">{it.label}</div>
-                      <div className="truncate text-[13.5px] text-[oklch(0.72_0.02_285)]">{it.group}{it.hint ? ` · ${it.hint}` : ""}</div>
+                      <div className="truncate text-[15.5px] font-semibold text-[oklch(0.985_0.01_255)]">{it.label}</div>
+                      <div className="truncate text-[13.5px] text-[oklch(0.84_0.05_248)]">{it.group}{it.hint ? ` · ${it.hint}` : ""}</div>
                     </div>
                     {current && (
-                      <span className="rounded-full border border-[oklch(0.38_0.08_265)] bg-[oklch(0.205_0.028_285)] px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[oklch(0.68_0.161_265)]">
+                      <span className="rounded-full border border-[oklch(0.38_0.08_265)] bg-[oklch(0.205_0.028_285)] px-2 py-0.5 text-[12px] font-bold uppercase tracking-wider text-[oklch(0.84_0.14_248)]">
                         Current
                       </span>
                     )}
-                    {selected && !current && <CornerDownLeft className="h-3.5 w-3.5 text-[oklch(0.72_0.02_285)]" />}
+                    {selected && !current && <CornerDownLeft className="h-3.5 w-3.5 text-[oklch(0.84_0.05_248)]" />}
                   </button>
                   <button
                     onClick={(e) => { e.stopPropagation(); onTogglePin(it.id); }}
@@ -2203,8 +2203,8 @@ function CommandPalette({
                     aria-pressed={isPinned}
                     className={`grid h-6 w-6 shrink-0 place-items-center rounded-md border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
                       isPinned
-                        ? "border-[oklch(0.38_0.08_265)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.68_0.161_265)]"
-                        : "border-[oklch(0.185_0.02_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.72_0.02_285)] hover:border-[oklch(0.38_0.08_265)] hover:text-[oklch(0.68_0.161_265)]"
+                        ? "border-[oklch(0.38_0.08_265)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.14_248)]"
+                        : "border-[oklch(0.185_0.02_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.84_0.05_248)] hover:border-[oklch(0.38_0.08_265)] hover:text-[oklch(0.84_0.14_248)]"
                     }`}
                   >
                     {isPinned ? <Pin className="h-3 w-3 fill-current" /> : <PinOff className="h-3 w-3" />}
@@ -2214,7 +2214,7 @@ function CommandPalette({
             })
           )}
         </div>
-        <div className="flex items-center justify-between gap-3 border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3.5 py-2 font-mono text-[13px] text-[oklch(0.72_0.02_285)]">
+        <div className="flex items-center justify-between gap-3 border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3.5 py-2 font-mono text-[13px] text-[oklch(0.84_0.05_248)]">
           <span>{results.length} of {ALL_ITEMS.length} · {category}</span>
           <span className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1"><kbd className="rounded border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1">↑</kbd><kbd className="rounded border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-1">↓</kbd> navigate</span>

@@ -89,7 +89,7 @@ export function DataTable({
                 {r.map((c, j) => (
                   <td
                     key={j}
-                    className={`px-3 py-2.5 text-[15px] ${j === 0 ? `font-semibold ${FG}` : "text-[oklch(0.86_0.02_285)]"} ${j > 3 ? "hidden lg:table-cell" : ""}`}
+                    className={`px-3 py-2.5 text-[15px] ${j === 0 ? `font-semibold ${FG}` : "text-[oklch(0.93_0.03_250)]"} ${j > 3 ? "hidden lg:table-cell" : ""}`}
                   >
                     {c}
                   </td>
@@ -106,14 +106,14 @@ export function DataTable({
         {rows.map((r, i) => (
           <li
             key={i}
-            className="rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] p-3 transition-colors"
+            className="glass3d rounded-xl p-3 transition-colors"
           >
             <div className={`text-[15.5px] font-bold ${FG}`}>{r[0]}</div>
             <dl className="mt-2 grid grid-cols-1 gap-1.5">
               {r.slice(1).map((c, j) => (
                 <div key={j} className="grid grid-cols-[minmax(0,7rem)_minmax(0,1fr)] items-start gap-2">
                   <dt className={`text-[13px] font-bold uppercase tracking-wider ${MUTED}`}>{headers[j + 1]}</dt>
-                  <dd className="min-w-0 text-[15px] text-[oklch(0.86_0.02_285)]">{c}</dd>
+                  <dd className="min-w-0 text-[15px] text-[oklch(0.93_0.03_250)]">{c}</dd>
                 </div>
               ))}
             </dl>
@@ -161,7 +161,7 @@ export function Bar({ value, tone = "indigo" }: { value: number; tone?: Tone }) 
       <div className="h-2.5 min-w-[72px] shadow-[inset_0_1px_3px_oklch(0_0_0/0.6)] flex-1 overflow-hidden rounded-full bg-[oklch(0.185_0.02_285)]">
         <span className={`block h-full rounded-full ${color} transition-[width] duration-700`} style={{ width: `${Math.min(100, value)}%` }} />
       </div>
-      <span className="shrink-0 font-mono text-[13.5px] font-bold text-[oklch(0.86_0.02_285)]">{value}%</span>
+      <span className="shrink-0 font-mono text-[13.5px] font-bold text-[oklch(0.93_0.03_250)]">{value}%</span>
     </div>
   );
 }

@@ -81,7 +81,7 @@ function FilterSelect({
         className={`min-h-9 rounded-xl border px-2.5 py-2 text-[14.5px] font-semibold outline-none transition-colors focus-visible:border-[oklch(0.72_0.168_265)] focus-visible:ring-4 focus-visible:ring-[oklch(0.72_0.168_265)]/15 ${
           value
             ? "border-[oklch(0.38_0.08_265)] bg-[oklch(0.72_0.168_265)]/12 text-[oklch(0.78_0.14_265)]"
-            : "border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.02_285)]"
+            : "border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.93_0.03_250)]"
         }`}
       >
         <option value="">All</option>
@@ -129,7 +129,7 @@ export function AuditExplorer({ initialModule = "" }: { initialModule?: string }
     <>
       <div className={`${CARD} p-3.5`}>
         <div className="flex flex-col gap-3">
-          <div className="flex min-w-0 items-center gap-2 rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 focus-within:border-[oklch(0.72_0.168_265)]">
+          <div className="flex min-w-0 items-center gap-2 glass3d rounded-xl px-3 py-2 focus-within:border-[oklch(0.72_0.168_265)]">
             <Search className={`h-4 w-4 shrink-0 ${MUTED}`} />
             <input
               className={`min-h-9 w-full bg-transparent text-[15px] outline-none placeholder:text-[oklch(0.6_0.02_285)] ${FG}`}
@@ -142,7 +142,7 @@ export function AuditExplorer({ initialModule = "" }: { initialModule?: string }
               <Button
                 type="button" variant="ghost" size="icon" aria-label="Clear search"
                 onClick={() => setQuery("")}
-                className="h-7 min-h-9 w-7 min-w-9 shrink-0 rounded-lg text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.22_0.03_285)]"
+                className="h-7 min-h-9 w-7 min-w-9 shrink-0 rounded-lg text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.22_0.03_285)]"
               >
                 <X className="h-3.5 w-3.5" />
               </Button>
@@ -158,7 +158,7 @@ export function AuditExplorer({ initialModule = "" }: { initialModule?: string }
             <Button
               type="button" size="sm" variant="ghost" disabled={!hasFilters}
               onClick={() => { setFilters(EMPTY); setQuery(""); }}
-              className="h-9 min-h-9 gap-1.5 rounded-xl border border-[oklch(0.27_0.025_285)] px-3 text-[14px] font-semibold text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.22_0.03_285)]"
+              className="h-9 min-h-9 gap-1.5 rounded-xl border border-[oklch(0.27_0.025_285)] px-3 text-[14px] font-semibold text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.22_0.03_285)]"
             >
               <X className="h-3.5 w-3.5" /> Reset all
             </Button>
@@ -187,7 +187,7 @@ export function AuditExplorer({ initialModule = "" }: { initialModule?: string }
               </button>
             ))}
             <span className={`ml-auto inline-flex items-center gap-1.5 text-[14px] ${MUTED}`}>
-              {pending && <Loader2 className="h-3.5 w-3.5 animate-spin text-[oklch(0.72_0.168_265)]" />}
+              {pending && <Loader2 className="h-3.5 w-3.5 animate-spin text-[oklch(0.84_0.14_252)]" />}
               {filtered.length} of {records.length} records
             </span>
           </div>

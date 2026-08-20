@@ -271,19 +271,19 @@ function ActionDialog({
 
   return (
     <Dialog open onOpenChange={(o) => { if (!o && !busy) onClose(); }}>
-      <DialogContent className="max-h-[88dvh] w-[calc(100vw-2rem)] max-w-[560px] overflow-y-auto border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.965_0.012_285)]">
+      <DialogContent className="max-h-[88dvh] w-[calc(100vw-2rem)] max-w-[560px] overflow-y-auto border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.985_0.01_255)]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-[16.5px] font-bold tracking-tight">
-            {spec.destructive && <ShieldAlert className="h-4 w-4 text-[oklch(0.74_0.16_20)]" />}
+            {spec.destructive && <ShieldAlert className="h-4 w-4 text-[oklch(0.86_0.16_22)]" />}
             {spec.title ?? spec.label}
           </DialogTitle>
-          <DialogDescription className="text-[15px] text-[oklch(0.72_0.02_285)]">
+          <DialogDescription className="text-[15px] text-[oklch(0.84_0.05_248)]">
             {spec.description ?? `${spec.module} · management action`}
           </DialogDescription>
         </DialogHeader>
 
         {spec.detail && phase === "form" && (
-          <div className="rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px]">
+          <div className="glass3d rounded-xl p-3 text-[15px]">
             {spec.detail}
           </div>
         )}
@@ -296,12 +296,12 @@ function ActionDialog({
             {fields.map((f) => {
               const id = `cm-f-${f.name}`;
               const err = errors[f.name];
-              const common = "w-full rounded-xl border bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[15.5px] text-[oklch(0.965_0.012_285)] outline-none transition-colors placeholder:text-[oklch(0.6_0.02_285)] focus-visible:border-[oklch(0.72_0.168_265)] focus-visible:ring-4 focus-visible:ring-[oklch(0.72_0.168_265)]/15";
+              const common = "w-full rounded-xl border bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[15.5px] text-[oklch(0.985_0.01_255)] outline-none transition-colors placeholder:text-[oklch(0.6_0.02_285)] focus-visible:border-[oklch(0.72_0.168_265)] focus-visible:ring-4 focus-visible:ring-[oklch(0.72_0.168_265)]/15";
               const border = err ? "border-[oklch(0.6_0.19_20)]" : "border-[oklch(0.27_0.025_285)]";
               return (
                 <div key={f.name} className="flex flex-col gap-1.5">
-                  <label htmlFor={id} className="text-[14.5px] font-semibold text-[oklch(0.86_0.02_285)]">
-                    {f.label}{f.required && <span className="ml-0.5 text-[oklch(0.74_0.16_20)]">*</span>}
+                  <label htmlFor={id} className="text-[14.5px] font-semibold text-[oklch(0.93_0.03_250)]">
+                    {f.label}{f.required && <span className="ml-0.5 text-[oklch(0.86_0.16_22)]">*</span>}
                   </label>
                   {f.type === "select" ? (
                     <select
@@ -352,7 +352,7 @@ function ActionDialog({
                     />
                   )}
                   {(err || f.hint) && (
-                    <span className={`text-[14px] ${err ? "text-[oklch(0.74_0.16_20)]" : "text-[oklch(0.72_0.02_285)]"}`}>
+                    <span className={`text-[14px] ${err ? "text-[oklch(0.86_0.16_22)]" : "text-[oklch(0.84_0.05_248)]"}`}>
                       {err ?? f.hint}
                     </span>
                   )}
@@ -364,25 +364,25 @@ function ActionDialog({
         )}
 
         {phase === "confirm" && (
-          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.34_0.09_85)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.86_0.02_285)]">
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.78_0.147_75)]" />
+          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.34_0.09_85)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.93_0.03_250)]">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.9_0.16_85)]" />
             <span>{spec.confirm}</span>
           </div>
         )}
 
         {phase === "processing" && (
-          <div className="flex items-center gap-2 rounded-xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.86_0.02_285)]">
-            <Loader2 className="h-4 w-4 animate-spin text-[oklch(0.72_0.168_265)]" /> Applying…
+          <div className="flex items-center gap-2 glass3d rounded-xl p-3 text-[15px] text-[oklch(0.93_0.03_250)]">
+            <Loader2 className="h-4 w-4 animate-spin text-[oklch(0.84_0.14_252)]" /> Applying…
           </div>
         )}
 
         {phase === "success" && (
-          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.38_0.1_155)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.86_0.02_285)]">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.72_0.1725_155)]" />
+          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.38_0.1_155)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.93_0.03_250)]">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.86_0.19_158)]" />
             <span>
-              <span className="font-semibold text-[oklch(0.965_0.012_285)]">{spec.label} staged.</span>{" "}
+              <span className="font-semibold text-[oklch(0.985_0.01_255)]">{spec.label} staged.</span>{" "}
               {message}
-              <span className="mt-1 block text-[14px] text-[oklch(0.72_0.02_285)]">
+              <span className="mt-1 block text-[14px] text-[oklch(0.84_0.05_248)]">
                 Kept in this session&apos;s change log and audit view. No backend service is connected to the Chat Manager in this build, so nothing was written to a server.
               </span>
             </span>
@@ -390,8 +390,8 @@ function ActionDialog({
         )}
 
         {phase === "error" && (
-          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.36_0.11_20)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.86_0.02_285)]">
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.74_0.16_20)]" /> {message}
+          <div className="flex items-start gap-2 rounded-xl border border-[oklch(0.36_0.11_20)] bg-[oklch(0.185_0.02_285)] p-3 text-[15px] text-[oklch(0.93_0.03_250)]">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.86_0.16_22)]" /> {message}
           </div>
         )}
 
@@ -416,7 +416,7 @@ function ActionDialog({
         </DialogFooter>
 
         {phase === "form" && dirty && (
-          <p className="text-[14px] text-[oklch(0.78_0.147_75)]">Unsaved changes in this form.</p>
+          <p className="text-[14px] text-[oklch(0.9_0.16_85)]">Unsaved changes in this form.</p>
         )}
       </DialogContent>
     </Dialog>

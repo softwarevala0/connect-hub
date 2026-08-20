@@ -88,11 +88,11 @@ export function PermissionMatrixGrid() {
   return (
     <div className={`overflow-hidden ${CARD}`}>
       <div className="flex flex-wrap items-center gap-2 border-b border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2.5">
-        <ShieldCheck className="h-4 w-4 text-[oklch(0.72_0.168_265)]" />
+        <ShieldCheck className="h-4 w-4 text-[oklch(0.84_0.14_252)]" />
         <span className={`text-[14.5px] font-bold ${FG}`}>Role × Module permissions</span>
         <span
           aria-live="polite"
-          className={`text-[14px] font-semibold ${dirty ? "text-[oklch(0.78_0.147_75)]" : MUTED}`}
+          className={`text-[14px] font-semibold ${dirty ? "text-[oklch(0.9_0.16_85)]" : MUTED}`}
         >
           {dirty
             ? `${changes.length} unsaved change${changes.length === 1 ? "" : "s"}`
@@ -102,14 +102,14 @@ export function PermissionMatrixGrid() {
           <Button
             type="button" size="sm" variant="ghost" disabled={!dirty || saving}
             onClick={reset}
-            className="h-8 min-h-9 gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] px-2.5 text-[14px] text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.22_0.03_285)]"
+            className="h-8 min-h-9 gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] px-2.5 text-[14px] text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.22_0.03_285)]"
           >
             <RotateCcw className="h-3.5 w-3.5" /> Reset
           </Button>
           <Button
             type="button" size="sm" variant="ghost" disabled={!dirty || saving}
             onClick={() => { setDraft({}); setConfirming(false); }}
-            className="h-8 min-h-9 gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] px-2.5 text-[14px] text-[oklch(0.86_0.02_285)] hover:bg-[oklch(0.22_0.03_285)]"
+            className="h-8 min-h-9 gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] px-2.5 text-[14px] text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.22_0.03_285)]"
           >
             <Undo2 className="h-3.5 w-3.5" /> Cancel
           </Button>
@@ -122,7 +122,7 @@ export function PermissionMatrixGrid() {
           </Button>
         </div>
         {confirming && dirty && (
-          <p className="w-full text-[14px] text-[oklch(0.78_0.147_75)]">
+          <p className="w-full text-[14px] text-[oklch(0.9_0.16_85)]">
             Applying {changes.length} permission change{changes.length === 1 ? "" : "s"} affects every user holding the role. Press “Confirm save” to continue.
           </p>
         )}
@@ -165,11 +165,11 @@ export function PermissionMatrixGrid() {
                         >
                           <Pill tone={value ? "emerald" : "slate"}>
                             {value ? "Allow" : "Deny"}
-                            {changed && <span className="ml-1 text-[oklch(0.78_0.147_75)]">•</span>}
+                            {changed && <span className="ml-1 text-[oklch(0.9_0.16_85)]">•</span>}
                           </Pill>
                         </button>
                         {changed && (
-                          <span className="mt-0.5 block text-[12.5px] text-[oklch(0.78_0.147_75)]">
+                          <span className="mt-0.5 block text-[12.5px] text-[oklch(0.9_0.16_85)]">
                             was {base ? "Allow" : "Deny"}
                           </span>
                         )}
