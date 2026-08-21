@@ -1183,6 +1183,7 @@ function QuickActions() {
 }
 
 function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
+  const { run: runAction } = useManagerActions();
   const ALL_SUGGESTIONS = useMemo(() => [
     { id: "sla-p0", sev: "high" as const, tags: ["sla", "escalation"], title: "Tighten P0 escalation SLA", body: "Reduce from 15m → 10m to match audit baseline.", impact: "9 policies", action: "Apply" },
     { id: "ai-redact", sev: "med" as const, tags: ["ai", "privacy"], title: "Enable AI redaction on legal-hold previews", body: "Prevents accidental PII leaks in read receipts.", impact: "2 modules", action: "Enable" },
