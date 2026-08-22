@@ -146,10 +146,10 @@ export function MiniStats({
 }: { items: { label: string; value: string; hint?: string; tone?: Tone; icon?: ComponentType<{ className?: string }> }[] }) {
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      {items.map((s) => {
+      {items.map((s, i) => {
         const Icon = s.icon ?? CircleDot;
         return (
-          <div key={s.label} className={`card3d ${cardTone(s.label)} p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-18px_rgba(0,0,0,0.6)]`}>
+          <div key={s.label} className={`card3d ${toneAt(i)} p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-18px_rgba(0,0,0,0.6)]`}>
             <div className="flex items-center gap-2">
               <span className="icon3d h-9 w-9 shrink-0">
                 <Icon className="h-4 w-4" />
