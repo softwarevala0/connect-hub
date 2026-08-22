@@ -15,16 +15,31 @@ export const CARD = "card3d card-tone-blue";
 export const MUTED = "text-[oklch(0.84_0.05_248)]";
 export const FG = "text-[oklch(0.98_0.012_255)]";
 
-/** Deterministic colour tone per card title so every card reads differently. */
+/** Rotating colour tones so adjacent cards never collide on the same colour. */
 const CARD_TONES = [
   "card-tone-blue", "card-tone-violet", "card-tone-cyan",
   "card-tone-emerald", "card-tone-amber", "card-tone-rose",
 ] as const;
 
+/** Index-based tone: cycle through the palette in order. */
+export function toneAt(index: number) {
+  const i = ((index % CARD_TONES.length) + CARD_TONES.length) % CARD_TONES.length;
+  return CARD_TONES[i]!;
+}
+
+/**
+ * Index-based tone keyed by first-seen order of a card title.
+ * Replaces hashing so two neighbouring cards can never land on the same tone.
+ */
+const toneOrder = new Map<string, number>();
+
 export function cardTone(seed: string) {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-  return CARD_TONES[h % CARD_TONES.length]!;
+  let idx = toneOrder.get(seed);
+  if (idx === undefined) {
+    idx = toneOrder.size;
+    toneOrder.set(seed, idx);
+  }
+  return toneAt(idx);
 }
 
 export type Tone = "emerald" | "amber" | "rose" | "indigo" | "slate";
@@ -131,10 +146,10 @@ export function MiniStats({
 }: { items: { label: string; value: string; hint?: string; tone?: Tone; icon?: ComponentType<{ className?: string }> }[] }) {
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      {items.map((s) => {
+      {items.map((s, i) => {
         const Icon = s.icon ?? CircleDot;
         return (
-          <div key={s.label} className={`card3d ${cardTone(s.label)} p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-18px_rgba(0,0,0,0.6)]`}>
+          <div key={s.label} className={`card3d ${toneAt(i)} p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-18px_rgba(0,0,0,0.6)]`}>
             <div className="flex items-center gap-2">
               <span className="icon3d h-9 w-9 shrink-0">
                 <Icon className="h-4 w-4" />
