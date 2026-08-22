@@ -988,7 +988,7 @@ function KpiRow({ id: _id }: { id: SectionId }) {
   ];
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-      {kpis.map((k) => {
+      {kpis.map((k, ki) => {
         const Icon = k.icon;
         const deltaCls = k.delta.startsWith("-")
           ? "text-[oklch(0.72_0.189_25)] bg-[oklch(0.185_0.02_285)] border-[oklch(0.38_0.08_25)]"
@@ -996,7 +996,7 @@ function KpiRow({ id: _id }: { id: SectionId }) {
           ? "text-[oklch(0.84_0.05_248)] bg-[oklch(0.185_0.02_285)] border-[oklch(0.27_0.025_285)]"
           : "text-[oklch(0.86_0.19_158)] bg-[oklch(0.185_0.02_285)] border-[oklch(0.38_0.12_155)]";
         return (
-          <div key={k.label} className="group rounded-2xl border border-[oklch(0.27_0.025_285)] bg-[oklch(0.2_0.03_285)]/85 p-4 shadow-[0_1px_2px_rgba(0,0,0,0.07)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[oklch(0.27_0.025_285)] hover:shadow-[0_14px_30px_-16px_rgba(0,0,0,0.44)]">
+          <div key={k.label} className={`group card3d ${toneAt(ki)} p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_22px_44px_-20px_rgba(0,0,0,0.7)]`}>
             <div className="flex items-center justify-between">
               <span className="text-[13px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">{k.label}</span>
               <Chip tone={k.tone}><Icon className="h-2.5 w-2.5" /></Chip>
@@ -1959,8 +1959,8 @@ function Chips({ items }: { items: string[] }) {
 function StatGrid({ stats }: { stats: { label: string; value: string; hint?: string }[] }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {stats.map((s) => (
-        <div key={s.label} className="glass3d rounded-xl p-3">
+      {stats.map((s, i) => (
+        <div key={s.label} className={`card3d ${toneAt(i)} glass-outline p-3.5 transition-all duration-200 hover:-translate-y-0.5`}>
           <div className="text-[13px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">{s.label}</div>
           <div className="mt-1 font-mono text-[19.5px] font-bold text-[oklch(0.985_0.01_255)]">{s.value}</div>
           {s.hint && <div className="mt-0.5 text-[13px] text-[oklch(0.84_0.05_248)]">{s.hint}</div>}
