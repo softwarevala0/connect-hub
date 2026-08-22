@@ -24,6 +24,7 @@ import {
 } from "@/components/manager/ManagementSections";
 import { ManagerActionProvider, requestSection, useManagerActions } from "@/components/manager/manager-actions";
 import { resolveActionSpec } from "@/components/manager/action-registry";
+import { toneAt } from "@/components/manager/manager-ui";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -1960,7 +1961,7 @@ function StatGrid({ stats }: { stats: { label: string; value: string; hint?: str
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {stats.map((s, i) => (
-        <div key={s.label} className={`card3d ${toneAt(i)} glass-outline p-3.5 transition-all duration-200 hover:-translate-y-0.5`}>
+        <div key={s.label} className={`card3d ${toneAt(i)} p-3.5 transition-all duration-200 hover:-translate-y-0.5`}>
           <div className="text-[13px] font-bold uppercase tracking-wider text-[oklch(0.84_0.05_248)]">{s.label}</div>
           <div className="mt-1 font-mono text-[19.5px] font-bold text-[oklch(0.985_0.01_255)]">{s.value}</div>
           {s.hint && <div className="mt-0.5 text-[13px] text-[oklch(0.84_0.05_248)]">{s.hint}</div>}
