@@ -15,16 +15,31 @@ export const CARD = "card3d card-tone-blue";
 export const MUTED = "text-[oklch(0.84_0.05_248)]";
 export const FG = "text-[oklch(0.98_0.012_255)]";
 
-/** Deterministic colour tone per card title so every card reads differently. */
+/** Rotating colour tones so adjacent cards never collide on the same colour. */
 const CARD_TONES = [
   "card-tone-blue", "card-tone-violet", "card-tone-cyan",
   "card-tone-emerald", "card-tone-amber", "card-tone-rose",
 ] as const;
 
+/** Index-based tone: cycle through the palette in order. */
+export function toneAt(index: number) {
+  const i = ((index % CARD_TONES.length) + CARD_TONES.length) % CARD_TONES.length;
+  return CARD_TONES[i]!;
+}
+
+/**
+ * Index-based tone keyed by first-seen order of a card title.
+ * Replaces hashing so two neighbouring cards can never land on the same tone.
+ */
+const toneOrder = new Map<string, number>();
+
 export function cardTone(seed: string) {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-  return CARD_TONES[h % CARD_TONES.length]!;
+  let idx = toneOrder.get(seed);
+  if (idx === undefined) {
+    idx = toneOrder.size;
+    toneOrder.set(seed, idx);
+  }
+  return toneAt(idx);
 }
 
 export type Tone = "emerald" | "amber" | "rose" | "indigo" | "slate";
