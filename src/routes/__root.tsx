@@ -115,6 +115,13 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body className="bg-background text-foreground">
+        <script
+          // Applies the persisted Chat Manager theme before paint (no flash).
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('cm.theme');var d=t!=='light';document.documentElement.classList.toggle('dark',d);document.documentElement.dataset.cmTheme=d?'dark':'light';}catch(e){}",
+          }}
+        />
 
         {children}
         <Scripts />
