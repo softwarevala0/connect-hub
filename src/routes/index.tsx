@@ -208,8 +208,17 @@ function ChatManagerShell() {
     return () => window.removeEventListener("cm:navigate", onNavigate);
   }, []);
 
+  // Responsive sidebar: icon rail on tablet, full width on desktop, off-canvas on mobile.
+  useEffect(() => {
+    const tablet = window.matchMedia("(min-width: 1024px) and (max-width: 1439px)");
+    const apply = () => setCollapsed(tablet.matches);
+    apply();
+    tablet.addEventListener("change", apply);
+    return () => tablet.removeEventListener("change", apply);
+  }, []);
+
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[oklch(0.16_0.045_264)] text-[oklch(0.97_0.012_260)]">
+    <div className="cm-shell flex h-screen w-screen overflow-hidden bg-[oklch(0.16_0.045_264)] text-[oklch(0.97_0.012_260)]">
       {sidebarOpen && (
         <button
           type="button"
@@ -282,8 +291,14 @@ function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void;
   const unread = notes.filter((n) => !n.read).length;
 
   useEffect(() => {
-    const stored = typeof window !== "undefined" ? localStorage.getItem("cm.lang") : null;
-    if (stored) setLang(stored);
+    try {
+      const stored = localStorage.getItem("cm.lang");
+      if (stored) setLang(stored);
+      const storedTheme = localStorage.getItem("cm.theme") === "light" ? "light" : "dark";
+      setTheme(storedTheme);
+      document.documentElement.classList.toggle("dark", storedTheme === "dark");
+      document.documentElement.dataset["cmTheme"] = storedTheme;
+    } catch { /* noop */ }
   }, []);
 
   function pickLang(l: string) {
@@ -296,6 +311,8 @@ function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void;
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
     document.documentElement.classList.toggle("dark", next === "dark");
+    document.documentElement.dataset["cmTheme"] = next;
+    try { localStorage.setItem("cm.theme", next); } catch { /* noop */ }
   }
 
   async function runSync() {
@@ -759,9 +776,27 @@ function ManagerSidebar({
 
   const isOpen = (label: string) => Boolean(query.trim()) || openGroups.includes(label);
 
+  /** Roving arrow-key navigation across every focusable control in the sidebar. */
+  function onSidebarKeyDown(e: React.KeyboardEvent<HTMLElement>) {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "Home" && e.key !== "End") return;
+    const nodes = Array.from(
+      e.currentTarget.querySelectorAll<HTMLElement>('button:not([disabled]), input, a[href]'),
+    ).filter((n) => n.offsetParent !== null);
+    if (nodes.length === 0) return;
+    const idx = nodes.indexOf(document.activeElement as HTMLElement);
+    e.preventDefault();
+    const next =
+      e.key === "Home" ? nodes[0]
+      : e.key === "End" ? nodes[nodes.length - 1]
+      : e.key === "ArrowDown" ? nodes[(idx + 1 + nodes.length) % nodes.length]
+      : nodes[(idx - 1 + nodes.length) % nodes.length];
+    next?.focus();
+  }
+
   return (
     <nav
       aria-label="Chat Manager sections"
+      onKeyDown={onSidebarKeyDown}
       data-collapsed={collapsed || undefined}
       className={`sidebar3d relative z-30 flex h-full shrink-0 flex-col overflow-hidden transition-[width] duration-200 ${
         collapsed ? "w-[76px]" : "w-[292px]"
