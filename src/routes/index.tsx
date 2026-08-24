@@ -333,7 +333,7 @@ function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void;
         <LayoutGrid className="h-4.5 w-4.5" />
       </button>
 
-      <div className="flex min-w-0 items-center gap-2.5">
+      <div className="flex min-w-0 flex-1 items-center gap-2.5 overflow-hidden">
         <div className="hidden min-w-0 flex-col leading-tight md:flex">
           <div className="flex items-center gap-1.5">
             <span className="cm-heading truncate text-[18px]">Software Vala</span>
@@ -345,10 +345,10 @@ function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void;
         <span className="ml-1 hidden items-center gap-1 rounded-full border border-[oklch(0.5_0.15_155)] bg-[oklch(0.32_0.1_158)] px-2.5 py-1 text-[13.5px] font-extrabold uppercase tracking-wider text-[oklch(0.88_0.17_158)] lg:inline-flex">
           <CircleDot className="h-3 w-3" /> Production
         </span>
-        <PermissionBadge role="Workspace Owner" compact />
+        <span className="hidden xl:inline-flex"><PermissionBadge role="Workspace Owner" compact /></span>
       </div>
 
-      <div className="ml-auto flex items-center gap-1.5">
+      <div className="ml-auto flex shrink-0 items-center gap-1.5">
         <button
           type="button"
           onClick={onOpenPalette}
