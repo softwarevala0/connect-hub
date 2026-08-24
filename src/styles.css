@@ -1144,7 +1144,7 @@ h4 { font-size: 16px; font-weight: 700; }
    ══════════════════════════════════════════════════════════ */
 
 /* Softer, lighter, more colourful glass buttons (compact) */
-@utility btn3d {
+.btn3d {
   border: 1px solid oklch(1 0 0 / 0.22);
   background:
     linear-gradient(180deg, oklch(1 0 0 / 0.20), oklch(1 0 0 / 0.05) 52%, oklch(0 0 0 / 0.08)),
