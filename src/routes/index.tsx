@@ -208,8 +208,17 @@ function ChatManagerShell() {
     return () => window.removeEventListener("cm:navigate", onNavigate);
   }, []);
 
+  // Responsive sidebar: icon rail on tablet, full width on desktop, off-canvas on mobile.
+  useEffect(() => {
+    const tablet = window.matchMedia("(min-width: 1024px) and (max-width: 1439px)");
+    const apply = () => setCollapsed(tablet.matches);
+    apply();
+    tablet.addEventListener("change", apply);
+    return () => tablet.removeEventListener("change", apply);
+  }, []);
+
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[oklch(0.16_0.045_264)] text-[oklch(0.97_0.012_260)]">
+    <div className="cm-shell flex h-screen w-screen overflow-hidden bg-[oklch(0.16_0.045_264)] text-[oklch(0.97_0.012_260)]">
       {sidebarOpen && (
         <button
           type="button"
@@ -282,8 +291,14 @@ function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void;
   const unread = notes.filter((n) => !n.read).length;
 
   useEffect(() => {
-    const stored = typeof window !== "undefined" ? localStorage.getItem("cm.lang") : null;
-    if (stored) setLang(stored);
+    try {
+      const stored = localStorage.getItem("cm.lang");
+      if (stored) setLang(stored);
+      const storedTheme = localStorage.getItem("cm.theme") === "light" ? "light" : "dark";
+      setTheme(storedTheme);
+      document.documentElement.classList.toggle("dark", storedTheme === "dark");
+      document.documentElement.dataset["cmTheme"] = storedTheme;
+    } catch { /* noop */ }
   }, []);
 
   function pickLang(l: string) {
@@ -296,6 +311,8 @@ function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void;
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
     document.documentElement.classList.toggle("dark", next === "dark");
+    document.documentElement.dataset["cmTheme"] = next;
+    try { localStorage.setItem("cm.theme", next); } catch { /* noop */ }
   }
 
   async function runSync() {
@@ -316,7 +333,7 @@ function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void;
         <LayoutGrid className="h-4.5 w-4.5" />
       </button>
 
-      <div className="flex min-w-0 items-center gap-2.5">
+      <div className="flex min-w-0 flex-1 items-center gap-2.5 overflow-hidden">
         <div className="hidden min-w-0 flex-col leading-tight md:flex">
           <div className="flex items-center gap-1.5">
             <span className="cm-heading truncate text-[18px]">Software Vala</span>
@@ -328,10 +345,10 @@ function GlobalHeader({ onOpenPalette, onOpenNav }: { onOpenPalette: () => void;
         <span className="ml-1 hidden items-center gap-1 rounded-full border border-[oklch(0.5_0.15_155)] bg-[oklch(0.32_0.1_158)] px-2.5 py-1 text-[13.5px] font-extrabold uppercase tracking-wider text-[oklch(0.88_0.17_158)] lg:inline-flex">
           <CircleDot className="h-3 w-3" /> Production
         </span>
-        <PermissionBadge role="Workspace Owner" compact />
+        <span className="hidden xl:inline-flex"><PermissionBadge role="Workspace Owner" compact /></span>
       </div>
 
-      <div className="ml-auto flex items-center gap-1.5">
+      <div className="ml-auto flex shrink-0 items-center gap-1.5">
         <button
           type="button"
           onClick={onOpenPalette}
@@ -759,9 +776,27 @@ function ManagerSidebar({
 
   const isOpen = (label: string) => Boolean(query.trim()) || openGroups.includes(label);
 
+  /** Roving arrow-key navigation across every focusable control in the sidebar. */
+  function onSidebarKeyDown(e: React.KeyboardEvent<HTMLElement>) {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "Home" && e.key !== "End") return;
+    const nodes = Array.from(
+      e.currentTarget.querySelectorAll<HTMLElement>('button:not([disabled]), input, a[href]'),
+    ).filter((n) => n.offsetParent !== null);
+    if (nodes.length === 0) return;
+    const idx = nodes.indexOf(document.activeElement as HTMLElement);
+    e.preventDefault();
+    const next =
+      e.key === "Home" ? nodes[0]
+      : e.key === "End" ? nodes[nodes.length - 1]
+      : e.key === "ArrowDown" ? nodes[(idx + 1 + nodes.length) % nodes.length]
+      : nodes[(idx - 1 + nodes.length) % nodes.length];
+    next?.focus();
+  }
+
   return (
     <nav
       aria-label="Chat Manager sections"
+      onKeyDown={onSidebarKeyDown}
       data-collapsed={collapsed || undefined}
       className={`sidebar3d relative z-30 flex h-full shrink-0 flex-col overflow-hidden transition-[width] duration-200 ${
         collapsed ? "w-[76px]" : "w-[292px]"

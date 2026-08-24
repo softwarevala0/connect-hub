@@ -6,22 +6,22 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "btn3d btn3d-hover relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-[14.5px] font-bold cursor-pointer transition-[color,background-color,border-color,box-shadow,transform] duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed aria-busy:cursor-progress [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "btn3d btn3d-hover relative inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-xl text-[13.5px] font-bold cursor-pointer transition-[color,background-color,border-color,box-shadow,transform] duration-150 active:scale-[0.98] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed aria-busy:cursor-progress [&_svg]:pointer-events-none [&_svg]:size-3.5 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "",
-        destructive: "[--cm-blue-700:oklch(0.52_0.19_20)]",
-        outline: "glass3d",
-        secondary: "[--cm-blue-700:oklch(0.42_0.10_290)]",
-        ghost: "glass3d",
+        default: "[--tone:oklch(0.63_0.205_260)]",
+        destructive: "[--tone:oklch(0.66_0.20_20)]",
+        outline: "[--tone:oklch(0.75_0.14_205)]",
+        secondary: "[--tone:oklch(0.66_0.20_300)]",
+        ghost: "[--tone:oklch(0.70_0.16_158)]",
         link: "!bg-none !border-0 !shadow-none text-[oklch(0.85_0.13_240)] underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-lg px-3 text-[13.5px]",
-        lg: "h-11 rounded-xl px-8 text-[15.5px]",
-        icon: "h-9 w-9 sm:h-9 sm:w-9 min-h-11 min-w-11 sm:min-h-9 sm:min-w-9",
+        default: "h-9 px-3.5 py-1.5",
+        sm: "h-8 rounded-lg px-2.5 text-[13px]",
+        lg: "h-10 rounded-xl px-5 text-[14.5px]",
+        icon: "h-9 w-9 min-h-9 min-w-9",
       },
     },
     defaultVariants: {
