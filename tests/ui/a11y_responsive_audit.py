@@ -34,6 +34,7 @@ NAME_JS = """() => {
     if (cs.visibility === 'hidden' || cs.display === 'none') continue;
     const name = (el.getAttribute('aria-label') || el.getAttribute('title') ||
       (el.getAttribute('aria-labelledby') ? (document.getElementById(el.getAttribute('aria-labelledby'))?.innerText || '') : '') ||
+      (el.closest('label')?.innerText || '') || el.getAttribute('placeholder') ||
       el.innerText || el.value || '').trim();
     if (!name) bad.push(el.tagName.toLowerCase() + '.' + (el.className.toString().split(' ')[0] || '?') + '@' + Math.round(r.x) + ',' + Math.round(r.y));
   }

@@ -10,6 +10,7 @@ import asyncio, sys
 from playwright.async_api import async_playwright
 
 BASE = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8080"
+ENGINE = sys.argv[2] if len(sys.argv) > 2 else "chromium"
 results = []
 
 def check(name, ok, detail=""):
@@ -24,7 +25,7 @@ async def open_menu(page, label_prefix):
 
 async def main():
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = await getattr(p, ENGINE).launch(headless=True)
         ctx = await browser.new_context(viewport={"width": 1440, "height": 1800})
         page = await ctx.new_page()
         errors = []
@@ -102,7 +103,7 @@ async def main():
         await browser.close()
 
     failed = [r for r in results if not r[1]]
-    print(f"\n{len(results) - len(failed)}/{len(results)} checks passed")
+    print(f"\n[{ENGINE}] {len(results) - len(failed)}/{len(results)} checks passed")
     sys.exit(1 if failed else 0)
 
 asyncio.run(main())
