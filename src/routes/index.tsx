@@ -1886,19 +1886,21 @@ function Toggles({ items }: { items: [string, boolean, boolean?][] }) {
               </span>
             )}
           </div>
-          <ToggleSwitch defaultOn={on} disabled={locked ?? false} />
+          <ToggleSwitch label={label} defaultOn={on} disabled={locked ?? false} />
         </div>
       ))}
     </div>
   );
 }
-function ToggleSwitch({ defaultOn, disabled }: { defaultOn: boolean; disabled?: boolean }) {
+function ToggleSwitch({ label, defaultOn, disabled }: { label?: string; defaultOn: boolean; disabled?: boolean }) {
   const [on, setOn] = useState(defaultOn);
   return (
     <button
       type="button"
+      role="switch"
       onClick={() => !disabled && setOn(!on)}
-      aria-pressed={on}
+      aria-checked={on}
+      aria-label={label ?? "Toggle setting"}
       disabled={disabled}
       className={`relative h-5 w-9 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
         on ? "bg-[oklch(0.72_0.168_155)]" : "bg-[oklch(0.27_0.025_285)]"
@@ -1906,6 +1908,9 @@ function ToggleSwitch({ defaultOn, disabled }: { defaultOn: boolean; disabled?: 
     >
       <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-[oklch(0.205_0.028_285)] shadow transition-transform ${on ? "translate-x-4" : "translate-x-0.5"}`} />
     </button>
+  );
+}
+
   );
 }
 function Callout({ title, children }: { title: string; children: React.ReactNode }) {
