@@ -2195,9 +2195,11 @@ function CommandPalette({
         className="w-full max-w-[680px] animate-fade-in overflow-hidden card3d card-tone-cyan shadow-[0_40px_100px_-30px_rgba(0,0,0,0.77)]"
       >
         <div className="flex items-center gap-2 border-b border-[oklch(0.185_0.02_285)] px-3.5 py-2.5">
-          <Search className="h-4 w-4 text-[oklch(0.84_0.05_248)]" />
+          <Search className="h-4 w-4 text-[oklch(0.84_0.05_248)]" aria-hidden="true" />
           <input
+            aria-label="Search commands, policies, roles, modules and users"
             ref={inputRef}
+
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Universal search · policies · roles · modules · users · fuzzy match…"
