@@ -1910,9 +1910,6 @@ function ToggleSwitch({ label, defaultOn, disabled }: { label?: string; defaultO
     </button>
   );
 }
-
-  );
-}
 function Callout({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start gap-3 rounded-xl border border-[oklch(0.27_0.025_285)] bg-gradient-to-br from-[oklch(0.185_0.02_285)] to-[oklch(0.2_0.03_285)] p-4">
