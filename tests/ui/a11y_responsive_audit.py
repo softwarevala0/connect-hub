@@ -101,6 +101,32 @@ async def run_theme(page, theme):
         check(f"{tag}: focus outlines visible", not nf, ", ".join(nf[:5]))
         await page.screenshot(path=f"{OUT}/{theme}-{label}.png")
 
+        if w < 1024:
+            # Off-canvas drawer: open it and verify it fits, overlays cleanly and stays keyboard-usable.
+            try:
+                await page.get_by_role("button", name="Open navigation").first.click(timeout=1500)
+                await page.wait_for_timeout(420)
+                geo = await page.evaluate("""() => {
+                  const nav = document.querySelector('nav[aria-label="Chat Manager sections"]');
+                  if (!nav) return { missing: true };
+                  const r = nav.getBoundingClientRect();
+                  const de = document.documentElement;
+                  return { left: Math.round(r.left), right: Math.round(r.right), top: Math.round(r.top),
+                           bottom: Math.round(r.bottom), vw: de.clientWidth, vh: de.clientHeight,
+                           over: de.scrollWidth - de.clientWidth,
+                           z: getComputedStyle(nav.parentElement).zIndex };
+                }""")
+                fits = (not geo.get("missing")) and geo["left"] >= -1 and geo["right"] <= geo["vw"] + 1 and geo["bottom"] <= geo["vh"] + 1
+                check(f"{tag}: open drawer fits viewport without clipping", fits, str(geo))
+                check(f"{tag}: open drawer causes no overflow", geo.get("over", 0) <= 1, str(geo.get("over")))
+                nf2 = await page.evaluate(FOCUS_JS)
+                check(f"{tag}: drawer focus outlines visible", not nf2, ", ".join(nf2[:4]))
+                await page.screenshot(path=f"{OUT}/{theme}-{label}-drawer.png")
+                await page.get_by_role("button", name="Close navigation").first.click(timeout=1500)
+                await page.wait_for_timeout(300)
+            except Exception as e:
+                check(f"{tag}: off-canvas drawer opens", False, str(e)[:120])
+
 
 async def main():
     os.makedirs(OUT, exist_ok=True)
