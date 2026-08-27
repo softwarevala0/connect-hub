@@ -243,7 +243,7 @@ function ChatManagerShell() {
         <GlobalHeader onOpenPalette={() => setPaletteOpen(true)} onOpenNav={() => setSidebarOpen(true)} />
         <Breadcrumb group={activeGroup.label} label={activeItem.label} />
 
-        <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto">
+        <main aria-label="Chat Manager content" className="scrollbar-thin min-h-0 flex-1 overflow-y-auto">
           <div className="grid w-full grid-cols-1 gap-6 px-4 py-5 md:px-6 md:py-6 xl:grid-cols-[minmax(0,1fr)_340px]">
             <div className="flex min-w-0 flex-col gap-5">
               <PageHeader item={activeItem} group={activeGroup.label} />
@@ -256,7 +256,8 @@ function ChatManagerShell() {
             </div>
             <ContextPanel item={activeItem} />
           </div>
-        </div>
+        </main>
+
 
         <BottomStatusBar item={activeItem} group={activeGroup.label} onOpenPalette={() => setPaletteOpen(true)} />
       </div>
@@ -1862,9 +1863,11 @@ function Field({ label, placeholder, mono, value, locked }: { label: string; pla
         {locked && <Lock className="h-3 w-3 text-[oklch(0.72_0.1575_155)]" aria-label="Policy locked" />}
       </span>
       <input
+        aria-label={label}
         readOnly={locked}
         defaultValue={value}
         placeholder={placeholder}
+
         className={`h-9 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[15px] text-[oklch(0.985_0.01_255)] outline-none transition-all placeholder:text-[oklch(0.45_0.025_285)] focus:border-[oklch(0.72_0.168_265)] focus:ring-4 focus:ring-[oklch(0.72_0.168_265)]/10 ${mono ? "font-mono" : ""} ${locked ? "cursor-not-allowed bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.05_248)]" : ""}`}
       />
     </label>
@@ -1883,19 +1886,21 @@ function Toggles({ items }: { items: [string, boolean, boolean?][] }) {
               </span>
             )}
           </div>
-          <ToggleSwitch defaultOn={on} disabled={locked ?? false} />
+          <ToggleSwitch label={label} defaultOn={on} disabled={locked ?? false} />
         </div>
       ))}
     </div>
   );
 }
-function ToggleSwitch({ defaultOn, disabled }: { defaultOn: boolean; disabled?: boolean }) {
+function ToggleSwitch({ label, defaultOn, disabled }: { label?: string; defaultOn: boolean; disabled?: boolean }) {
   const [on, setOn] = useState(defaultOn);
   return (
     <button
       type="button"
+      role="switch"
       onClick={() => !disabled && setOn(!on)}
-      aria-pressed={on}
+      aria-checked={on}
+      aria-label={label ?? "Toggle setting"}
       disabled={disabled}
       className={`relative h-5 w-9 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
         on ? "bg-[oklch(0.72_0.168_155)]" : "bg-[oklch(0.27_0.025_285)]"
@@ -2192,9 +2197,11 @@ function CommandPalette({
         className="w-full max-w-[680px] animate-fade-in overflow-hidden card3d card-tone-cyan shadow-[0_40px_100px_-30px_rgba(0,0,0,0.77)]"
       >
         <div className="flex items-center gap-2 border-b border-[oklch(0.185_0.02_285)] px-3.5 py-2.5">
-          <Search className="h-4 w-4 text-[oklch(0.84_0.05_248)]" />
+          <Search className="h-4 w-4 text-[oklch(0.84_0.05_248)]" aria-hidden="true" />
           <input
+            aria-label="Search commands, policies, roles, modules and users"
             ref={inputRef}
+
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Universal search · policies · roles · modules · users · fuzzy match…"
