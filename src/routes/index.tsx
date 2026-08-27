@@ -243,7 +243,7 @@ function ChatManagerShell() {
         <GlobalHeader onOpenPalette={() => setPaletteOpen(true)} onOpenNav={() => setSidebarOpen(true)} />
         <Breadcrumb group={activeGroup.label} label={activeItem.label} />
 
-        <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto">
+        <main aria-label="Chat Manager content" className="scrollbar-thin min-h-0 flex-1 overflow-y-auto">
           <div className="grid w-full grid-cols-1 gap-6 px-4 py-5 md:px-6 md:py-6 xl:grid-cols-[minmax(0,1fr)_340px]">
             <div className="flex min-w-0 flex-col gap-5">
               <PageHeader item={activeItem} group={activeGroup.label} />
@@ -256,7 +256,8 @@ function ChatManagerShell() {
             </div>
             <ContextPanel item={activeItem} />
           </div>
-        </div>
+        </main>
+
 
         <BottomStatusBar item={activeItem} group={activeGroup.label} onOpenPalette={() => setPaletteOpen(true)} />
       </div>
