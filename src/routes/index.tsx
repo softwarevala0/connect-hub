@@ -1863,9 +1863,11 @@ function Field({ label, placeholder, mono, value, locked }: { label: string; pla
         {locked && <Lock className="h-3 w-3 text-[oklch(0.72_0.1575_155)]" aria-label="Policy locked" />}
       </span>
       <input
+        aria-label={label}
         readOnly={locked}
         defaultValue={value}
         placeholder={placeholder}
+
         className={`h-9 rounded-lg border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-3 text-[15px] text-[oklch(0.985_0.01_255)] outline-none transition-all placeholder:text-[oklch(0.45_0.025_285)] focus:border-[oklch(0.72_0.168_265)] focus:ring-4 focus:ring-[oklch(0.72_0.168_265)]/10 ${mono ? "font-mono" : ""} ${locked ? "cursor-not-allowed bg-[oklch(0.185_0.02_285)] text-[oklch(0.84_0.05_248)]" : ""}`}
       />
     </label>
