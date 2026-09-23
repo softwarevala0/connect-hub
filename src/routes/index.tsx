@@ -929,6 +929,7 @@ function SidebarLink({
         onClick={() => onSelect(item.id)}
         aria-current={active ? "page" : undefined}
         title={item.label}
+        data-manager-section={item.id}
         className="flex min-h-11 min-w-0 flex-1 items-center gap-2.5 rounded-xl px-1.5 py-1.5 text-left focus:outline-none"
       >
         <span className={`icon3d h-9 w-9 shrink-0 ${active ? "" : "opacity-95"}`}><Icon className="h-4 w-4" /></span>

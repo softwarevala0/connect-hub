@@ -78,25 +78,32 @@ async def main():
         # 6. Every registered management action opens its real dialog.
         # Re-query each control by its stable action id because dialogs and
         # navigation intentionally replace parts of the DOM after a click.
-        buttons = page.locator("[data-manager-action]")
-        action_ids = await buttons.evaluate_all(
-            "els => [...new Set(els.filter(e => e.offsetParent !== null).map(e => e.dataset.managerAction))]"
-        )
         dead = []
         tested = 0
-        for action_id in action_ids:
-            b = page.locator(f'[data-manager-action="{action_id}"]').first
-            try:
-                if not await b.is_visible():
+        seen = set()
+        section_ids = await page.locator('[data-manager-section]').evaluate_all(
+            "els => [...new Set(els.map(e => e.dataset.managerSection))]"
+        )
+        for section_id in section_ids:
+            await page.locator(f'[data-manager-section="{section_id}"]').first.click()
+            await page.wait_for_timeout(120)
+            action_ids = await page.locator('[data-manager-action]').evaluate_all(
+                "els => [...new Set(els.filter(e => e.offsetParent !== null).map(e => e.dataset.managerAction))]"
+            )
+            for action_id in action_ids:
+                if action_id in seen:
                     continue
-                await b.click(timeout=1500)
-                await page.locator('[role="dialog"]').wait_for(state="visible", timeout=2000)
-                tested += 1
-                await page.keyboard.press("Escape")
-                await page.locator('[role="dialog"]').wait_for(state="hidden", timeout=2000)
-            except Exception as exc:
-                dead.append(f"{action_id}: {str(exc).splitlines()[0]}")
-        check(f"management action buttons clickable ({tested} tested)", not dead, ",".join(dead[:5]))
+                seen.add(action_id)
+                b = page.locator(f'[data-manager-action="{action_id}"]').first
+                try:
+                    await b.click(timeout=2000)
+                    await page.locator('[role="dialog"]').wait_for(state="visible", timeout=2500)
+                    tested += 1
+                    await page.keyboard.press("Escape")
+                    await page.locator('[role="dialog"]').wait_for(state="hidden", timeout=2500)
+                except Exception as exc:
+                    dead.append(f"{action_id}: {str(exc).splitlines()[0]}")
+        check(f"management action buttons clickable ({tested} tested)", tested > 0 and not dead, ",".join(dead[:5]))
 
         check("no runtime errors", not errors, "; ".join(errors[:3]))
         await browser.close()
