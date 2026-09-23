@@ -75,28 +75,27 @@ async def main():
         focused = await page.evaluate("document.activeElement.closest('nav[aria-label=\\'Chat Manager sections\\']') !== null")
         check("sidebar arrow-key navigation", focused)
 
-        # 6. Every management action button opens a real dialog
-        buttons = page.locator("main button, .card3d button")
-        total = await buttons.count()
+        # 6. Every registered management action opens its real dialog.
+        # Re-query each control by its stable action id because dialogs and
+        # navigation intentionally replace parts of the DOM after a click.
+        buttons = page.locator("[data-manager-action]")
+        action_ids = await buttons.evaluate_all(
+            "els => [...new Set(els.filter(e => e.offsetParent !== null).map(e => e.dataset.managerAction))]"
+        )
         dead = []
         tested = 0
-        for i in range(total):
-            b = buttons.nth(i)
+        for action_id in action_ids:
+            b = page.locator(f'[data-manager-action="{action_id}"]').first
             try:
                 if not await b.is_visible():
                     continue
-                name = (await b.inner_text()).strip()
-                if not name or len(name) > 40:
-                    continue
                 await b.click(timeout=1500)
-                await page.wait_for_timeout(220)
-                dlg = await page.locator('[role="dialog"]').count()
+                await page.locator('[role="dialog"]').wait_for(state="visible", timeout=2000)
                 tested += 1
-                if dlg:
-                    await page.keyboard.press("Escape")
-                    await page.wait_for_timeout(150)
-            except Exception:
-                dead.append(name if 'name' in dir() else str(i))
+                await page.keyboard.press("Escape")
+                await page.locator('[role="dialog"]').wait_for(state="hidden", timeout=2000)
+            except Exception as exc:
+                dead.append(f"{action_id}: {str(exc).splitlines()[0]}")
         check(f"management action buttons clickable ({tested} tested)", not dead, ",".join(dead[:5]))
 
         check("no runtime errors", not errors, "; ".join(errors[:3]))
