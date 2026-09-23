@@ -231,6 +231,7 @@ function ChatManagerShell() {
         <ManagerSidebar
           active={active}
           onSelect={(id) => { selectSection(id); setSidebarOpen(false); }}
+          onClose={() => setSidebarOpen(false)}
           recent={recent}
           pinned={pinned}
           onTogglePin={togglePin}
@@ -643,7 +644,7 @@ function PermissionBadge({ role, compact }: { role: string; compact?: boolean })
           if (e.key === "Escape") { setOpen(false); }
           if ((e.key === "Enter" || e.key === " ") && !open) { e.preventDefault(); setOpen(true); }
         }}
-        className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[12.5px] font-bold uppercase tracking-wider transition-all hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${toneCls}`}
+        className={`focus-ring inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[12.5px] font-bold uppercase tracking-wider transition-all hover:brightness-95 ${toneCls}`}
       >
         <ShieldCheck className="h-2.5 w-2.5" aria-hidden="true" /> {role}
         <Info className="h-2.5 w-2.5 opacity-70" aria-hidden="true" />
@@ -745,10 +746,11 @@ const SECTION_SHORTCUTS: Partial<Record<SectionId, string>> = {
 };
 
 function ManagerSidebar({
-  active, onSelect, recent, pinned, onTogglePin, collapsed, onToggleCollapse,
+  active, onSelect, onClose, recent, pinned, onTogglePin, collapsed, onToggleCollapse,
 }: {
   active: SectionId;
   onSelect: (id: SectionId) => void;
+  onClose: () => void;
   recent: string[];
   pinned: string[];
   onTogglePin: (id: string) => void;
@@ -815,9 +817,17 @@ function ManagerSidebar({
           type="button"
           onClick={onToggleCollapse}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="btn3d btn3d-hover grid h-9 w-9 shrink-0 place-items-center rounded-xl"
+          className="btn3d btn3d-hover hidden h-9 w-9 shrink-0 place-items-center rounded-xl lg:grid"
         >
           <ChevronRight className={`h-4 w-4 transition-transform ${collapsed ? "" : "rotate-180"}`} />
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close navigation"
+          className="btn3d btn3d-hover grid h-9 w-9 shrink-0 place-items-center rounded-xl lg:hidden"
+        >
+          <XIcon className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
 
@@ -935,7 +945,7 @@ function SidebarLink({
           onClick={(e) => { e.stopPropagation(); onTogglePin(item.id); }}
           aria-pressed={pinned}
           aria-label={pinned ? `Unpin ${item.label}` : `Pin ${item.label}`}
-          className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg text-[oklch(0.86_0.08_240)] transition-opacity ${pinned ? "opacity-100" : "opacity-0 group-hover:opacity-100 focus-visible:opacity-100"}`}
+          className={`focus-ring grid h-8 w-8 shrink-0 place-items-center rounded-lg text-[oklch(0.86_0.08_240)] transition-opacity ${pinned ? "opacity-100" : "opacity-0 group-hover:opacity-100 focus:opacity-100"}`}
         >
           {pinned ? <Pin className="h-3.5 w-3.5 fill-current" /> : <PinOff className="h-3.5 w-3.5" />}
         </button>

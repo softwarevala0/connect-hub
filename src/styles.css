@@ -862,6 +862,12 @@ textarea:focus-visible,
   border-radius: 8px;
 }
 
+/* Keep the dashboard's keyboard ring detectable when focus is moved by roving-navigation scripts. */
+.cm-shell :where(button, a, input, textarea, select, [role="button"], [tabindex]):focus {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
 /* ── Premium micro-animations ── */
 @keyframes sv-shake {
   0%, 100% { transform: translateX(0); }
