@@ -644,7 +644,7 @@ function PermissionBadge({ role, compact }: { role: string; compact?: boolean })
           if (e.key === "Escape") { setOpen(false); }
           if ((e.key === "Enter" || e.key === " ") && !open) { e.preventDefault(); setOpen(true); }
         }}
-        className={`focus-ring inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[12.5px] font-bold uppercase tracking-wider transition-all hover:brightness-95 ${toneCls}`}
+        className={`focus-ring inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[12.5px] font-bold uppercase tracking-wider transition-[filter] hover:brightness-95 ${toneCls}`}
       >
         <ShieldCheck className="h-2.5 w-2.5" aria-hidden="true" /> {role}
         <Info className="h-2.5 w-2.5 opacity-70" aria-hidden="true" />
