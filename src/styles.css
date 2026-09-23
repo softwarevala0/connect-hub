@@ -864,7 +864,7 @@ textarea:focus-visible,
 
 /* Keep the dashboard's keyboard ring detectable when focus is moved by roving-navigation scripts. */
 .cm-shell :where(button, a, input, textarea, select, [role="button"], [tabindex]):focus {
-  outline: 3px solid var(--color-ring);
+  outline: 3px solid var(--ring);
   outline-offset: 2px;
 }
 
