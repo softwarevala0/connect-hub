@@ -161,7 +161,7 @@ export function PermissionMatrixGrid() {
                           aria-checked={value}
                           aria-label={`${role}, ${mod}, ${a}: ${value ? "Allow" : "Deny"}${changed ? " (modified)" : ""}`}
                           onClick={() => toggle(role, mod, a)}
-                          className={`inline-flex min-h-9 items-center justify-center rounded-full transition-transform duration-150 hover:scale-[1.04] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)] focus-visible:ring-offset-2 focus-visible:ring-offset-[oklch(0.205_0.028_285)] ${changed ? "ring-2 ring-[oklch(0.78_0.147_75)] ring-offset-2 ring-offset-[oklch(0.205_0.028_285)]" : ""}`}
+                          className={`focus-ring inline-flex min-h-9 items-center justify-center rounded-full transition-transform duration-150 hover:scale-[1.04] active:scale-95 ${changed ? "ring-2 ring-[oklch(0.78_0.147_75)] ring-offset-2 ring-offset-[oklch(0.205_0.028_285)]" : ""}`}
                         >
                           <Pill tone={value ? "emerald" : "slate"}>
                             {value ? "Allow" : "Deny"}

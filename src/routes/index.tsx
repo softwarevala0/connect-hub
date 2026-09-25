@@ -51,6 +51,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Enterprise Communication Control Center — policies, security, roles, audit and integrations for Software Vala." },
       { property: "og:title", content: "Chat Manager — Software Vala" },
       { property: "og:description", content: "Enterprise Communication Control Center for Software Vala." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ChatManagerPage,
@@ -644,7 +646,7 @@ function PermissionBadge({ role, compact }: { role: string; compact?: boolean })
           if (e.key === "Escape") { setOpen(false); }
           if ((e.key === "Enter" || e.key === " ") && !open) { e.preventDefault(); setOpen(true); }
         }}
-        className={`focus-ring inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[12.5px] font-bold uppercase tracking-wider transition-[filter] hover:brightness-95 ${toneCls}`}
+        className={`focus-ring inline-flex min-h-8 items-center gap-1 rounded-full border px-2 py-0.5 text-[12.5px] font-bold uppercase tracking-wider transition-[filter] hover:brightness-95 ${toneCls}`}
       >
         <ShieldCheck className="h-2.5 w-2.5" aria-hidden="true" /> {role}
         <Info className="h-2.5 w-2.5 opacity-70" aria-hidden="true" />
@@ -721,11 +723,13 @@ function fuzzyScore(text: string, q: string): number {
 }
 
 function useLocalList(key: string, initial: string[] = []): [string[], (v: string[]) => void] {
-  const [list, setList] = useState<string[]>(() => {
-    if (typeof window === "undefined") return initial;
-    try { return JSON.parse(localStorage.getItem(key) ?? "null") ?? initial; }
-    catch { return initial; }
-  });
+  const [list, setList] = useState<string[]>(initial);
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem(key) ?? "null") as unknown;
+      if (Array.isArray(stored) && stored.every((value) => typeof value === "string")) setList(stored);
+    } catch { /* Keep the server-safe defaults. */ }
+  }, [key]);
   const set = (v: string[]) => {
     setList(v);
     try { localStorage.setItem(key, JSON.stringify(v)); } catch { /* noop */ }
@@ -962,7 +966,7 @@ function Breadcrumb({ group, label }: { group: string; label: string }) {
   return (
     <div className="border-b border-[oklch(0.185_0.02_285)] bg-[oklch(0.24_0.035_285)]/60">
       <div className="mx-auto flex max-w-[1600px] items-center gap-1.5 px-4 py-2 font-mono text-[13.5px] text-[oklch(0.84_0.05_248)] md:px-6">
-        <Link to="/" className="hover:text-[oklch(0.84_0.14_248)]">Home</Link>
+        <Link to="/" className="inline-flex min-h-8 items-center hover:text-[oklch(0.84_0.14_248)]">Home</Link>
         <ChevronRight className="h-3 w-3" />
         <span>Chat Manager</span>
         <ChevronRight className="h-3 w-3" />
@@ -1329,9 +1333,9 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
             {suggestions.length} actions · refined by {feedbackCount} rating{feedbackCount === 1 ? "" : "s"}
           </span>
           {feedbackCount > 0 ? (
-            <button onClick={resetFeedback} className="font-mono text-[13px] text-[oklch(0.84_0.14_248)] hover:underline">Reset</button>
+            <button onClick={resetFeedback} className="min-h-8 rounded-md px-1 font-mono text-[13px] text-[oklch(0.84_0.14_248)] hover:underline">Reset</button>
           ) : (
-            <button onClick={() => { toast.success("Re-scan complete — recommendations refreshed."); }} className="font-mono text-[13px] font-bold text-[oklch(0.84_0.14_248)] hover:underline">Re-scan</button>
+            <button onClick={() => { toast.success("Re-scan complete — recommendations refreshed."); }} className="min-h-8 rounded-md px-1 font-mono text-[13px] font-bold text-[oklch(0.84_0.14_248)] hover:underline">Re-scan</button>
           )}
         </div>
         {suggestions.length === 0 ? (
@@ -1360,12 +1364,12 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
                 <div className="mt-1.5 flex items-center gap-1.5">
                   <button
                     onClick={() => { runAction({ label: s.action, title: `${s.action}: ${s.title}`, module: "AI Recommendations", action: `ai.recommendation.${s.action.toLowerCase()}`, description: s.body, submitLabel: s.action, confirm: `Apply "${s.title}" to ${s.impact}?`, onSubmit: () => { dismiss(s.id); return s.title; } }); }}
-                    className="btn3d btn3d-hover inline-flex h-7 items-center gap-1 rounded-lg px-2.5 text-[13.5px] font-bold text-white">
+                    className="btn3d btn3d-hover inline-flex h-8 items-center gap-1 rounded-lg px-2.5 text-[13.5px] font-bold text-white">
                     <Zap className="h-3 w-3" aria-hidden="true" /> {s.action}
                   </button>
                   <button
                     onClick={() => dismiss(s.id)}
-                    className="inline-flex h-6 items-center rounded-md border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-2 text-[13.5px] font-semibold text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)]"
+                    className="inline-flex h-8 items-center rounded-md border border-[oklch(0.27_0.025_285)] bg-[oklch(0.205_0.028_285)] px-2 text-[13.5px] font-semibold text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.185_0.02_285)]"
                   >
                     Dismiss
                   </button>
@@ -1375,7 +1379,7 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
                       aria-pressed={rated === "up"}
                       aria-label="Helpful — show more like this"
                       title="Helpful — show more like this"
-                      className={`grid h-6 w-6 place-items-center rounded-md border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
+                      className={`grid h-8 w-8 place-items-center rounded-md border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
                         rated === "up"
                           ? "border-[oklch(0.72_0.1575_155)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.86_0.19_158)]"
                           : "border-[oklch(0.185_0.02_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.84_0.05_248)] hover:border-[oklch(0.38_0.12_155)] hover:text-[oklch(0.86_0.19_158)]"
@@ -1388,7 +1392,7 @@ function ContextPanel({ item }: { item: (typeof ALL_ITEMS)[number] }) {
                       aria-pressed={rated === "down"}
                       aria-label="Not helpful — show fewer like this"
                       title="Not helpful — show fewer like this"
-                      className={`grid h-6 w-6 place-items-center rounded-md border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
+                      className={`grid h-8 w-8 place-items-center rounded-md border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
                         rated === "down"
                           ? "border-[oklch(0.78_0.16_25)] bg-[oklch(0.185_0.02_285)] text-[oklch(0.72_0.189_25)]"
                           : "border-[oklch(0.185_0.02_285)] bg-[oklch(0.205_0.028_285)] text-[oklch(0.84_0.05_248)] hover:border-[oklch(0.38_0.12_25)] hover:text-[oklch(0.72_0.189_25)]"
@@ -1913,11 +1917,11 @@ function ToggleSwitch({ label, defaultOn, disabled }: { label?: string; defaultO
       aria-checked={on}
       aria-label={label ?? "Toggle setting"}
       disabled={disabled}
-      className={`relative h-5 w-9 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
+      className={`relative h-7 w-11 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40 ${
         on ? "bg-[oklch(0.72_0.168_155)]" : "bg-[oklch(0.27_0.025_285)]"
       } ${disabled ? "cursor-not-allowed opacity-70" : ""}`}
     >
-      <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-[oklch(0.205_0.028_285)] shadow transition-transform ${on ? "translate-x-4" : "translate-x-0.5"}`} />
+      <span className={`absolute top-1 h-5 w-5 rounded-full bg-[oklch(0.205_0.028_285)] shadow transition-transform ${on ? "translate-x-5" : "translate-x-1"}`} />
     </button>
   );
 }
@@ -2124,7 +2128,7 @@ function BottomStatusBar({
       <Sep className="hidden md:inline-block" />
       <button
         onClick={onOpenPalette}
-        className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[oklch(0.84_0.14_248)] transition-colors hover:bg-[oklch(0.185_0.02_285)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40"
+        className="inline-flex min-h-8 items-center gap-1 rounded-md px-1.5 py-0.5 text-[oklch(0.84_0.14_248)] transition-colors hover:bg-[oklch(0.185_0.02_285)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.72_0.168_265)]/40"
         aria-label="Open command palette"
       >
         <Command className="h-3 w-3" /> K
