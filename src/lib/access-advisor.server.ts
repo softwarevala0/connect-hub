@@ -27,7 +27,7 @@ export class AdvisorError extends Error {
 }
 
 export async function recommendAccess(description: string): Promise<AccessRecommendation> {
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env['LOVABLE_API_KEY'];
   if (!apiKey) throw new AdvisorError("AI is not configured for this app.", 401);
 
   let runId: string | undefined;
