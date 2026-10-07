@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { AccessAdvisor } from "@/components/manager/AccessAdvisor";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   Settings, MessagesSquare, ScrollText, ShieldCheck, Timer, Gavel,
@@ -1671,6 +1672,7 @@ function SectionRenderer({ id }: { id: SectionId }) {
     );
     case "permissions": return (
       <Section title="Permission Matrix" desc="Effective permissions per Role × Module × Action — read, create, update, delete and approve.">
+        <AccessAdvisor />
         <PermissionMatrixGrid />
         <Table headers={["User", "Role", "Overrides", "Effective Since"]} note="Per-user overrides sit on top of the matrix above." />
       </Section>
