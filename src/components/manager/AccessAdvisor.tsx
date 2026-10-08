@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { getAccessRecommendation } from "@/lib/access-advisor.functions";
 import { useManagerActions } from "./manager-actions";
 import { baselineAllowed, PM_ACTIONS } from "./PermissionMatrix";
+import { defaultsForAdvisor, usePermissionDefaults } from "./permission-defaults";
 
 type Rec = Extract<Awaited<ReturnType<typeof getAccessRecommendation>>, { ok: true }>["rec"];
 
 export function AccessAdvisor() {
   const run = useServerFn(getAccessRecommendation);
   const { stage, permissions, applyPermissions } = useManagerActions();
+  const defaults = usePermissionDefaults();
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +22,7 @@ export function AccessAdvisor() {
   async function submit() {
     setLoading(true); setError(null); setRec(null); setApplied(false);
     try {
-      const r = await run({ data: { description: text } });
+      const r = await run({ data: { description: text, ...defaultsForAdvisor(defaults) } });
       if (r.ok) setRec(r.rec); else setError(r.error);
     } catch {
       setError("Please describe the team in at least 10 characters.");

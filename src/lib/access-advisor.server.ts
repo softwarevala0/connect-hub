@@ -26,7 +26,17 @@ export class AdvisorError extends Error {
   }
 }
 
-export async function recommendAccess(description: string): Promise<AccessRecommendation> {
+export type AdvisorDefaults = {
+  baseRole?: string;
+  defaults?: { role: string; grants: { module: string; actions: string[] }[] }[];
+};
+
+export async function recommendAccess(description: string, ctx: AdvisorDefaults = {}): Promise<AccessRecommendation> {
+  const defaultsText = ctx.defaults?.length
+    ? `\nWorkspace default base role for new teams: ${ctx.baseRole ?? "Client"}.\nCurrent default permissions per role (admin-configured):\n` +
+      ctx.defaults.map((r) => `- ${r.role}: ${r.grants.map((g) => `${g.module}[${g.actions.join("/")}]`).join(", ") || "none"}`).join("\n") +
+      `\nPrefer the default base role unless the team clearly needs a different one. Choose the role whose defaults are closest to (without exceeding) the need, and list only grants the team needs. Mention in risks any needed grant beyond that role's defaults.`
+    : "";
   const apiKey = process.env['LOVABLE_API_KEY'];
   if (!apiKey) throw new AdvisorError("AI is not configured for this app.", 401);
 
@@ -56,7 +66,7 @@ export async function recommendAccess(description: string): Promise<AccessRecomm
     model: provider.responses("openai/gpt-6-astra"),
     system: `You are a security advisor applying the principle of least privilege.
 Permission matrix: roles ${ROLES.join(", ")}; modules ${MODULES.join(", ")}; actions ${ACTIONS.join(", ")}.
-Given a team's described responsibilities, pick the single closest base role and list ONLY the module/action grants strictly needed. Omit modules with no needed actions. Prefer Read over write actions; grant Delete or Approve only when explicitly required. Keep each reason under 20 words, summary under 40 words, and list up to 4 risks or caveats.`,
+Given a team's described responsibilities, pick the single closest base role and list ONLY the module/action grants strictly needed. Omit modules with no needed actions. Prefer Read over write actions; grant Delete or Approve only when explicitly required. Keep each reason under 20 words, summary under 40 words, and list up to 4 risks or caveats.${defaultsText}`,
     messages: [{ role: "user", content: description }],
     output: Output.object({ schema }),
     providerOptions: {
