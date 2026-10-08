@@ -6,6 +6,7 @@
  * tracked as an unsaved draft. Saving stages the diff in the session change log
  * (no backend is connected to the Chat Manager in this build).
  */
+import { defaultAllowed, usePermissionDefaults } from "./permission-defaults";
 import { useMemo, useState } from "react";
 import { RotateCcw, Save, Undo2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,10 +29,12 @@ const key = (role: string, mod: string, action: string) => `${role}|${mod}|${act
 
 /** Baseline (current) effective permission — unchanged rules. */
 export function baselineAllowed(role: string, mod: string, action: string) {
-  return (PM_LEVEL[role] ?? 0) >= (PM_WEIGHT[action] ?? 0) + (PM_MOD_WEIGHT[mod] ?? 0);
+  return defaultAllowed(role, mod, action);
 }
+void PM_LEVEL; void PM_WEIGHT; void PM_MOD_WEIGHT;
 
 export function PermissionMatrixGrid() {
+  usePermissionDefaults();
   const { stage, permissions, applyPermissions, resetPermissions } = useManagerActions();
   const eff = (r: string, m: string, a: string) => permissions[key(r, m, a)] ?? baselineAllowed(r, m, a);
   const overrideCount = Object.keys(permissions).length;
