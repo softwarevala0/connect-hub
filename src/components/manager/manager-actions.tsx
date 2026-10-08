@@ -126,7 +126,12 @@ type Ctx = {
   resetPermissions: () => void;
 };
 
-const ManagerActionContext = createContext<Ctx | null>(null);
+// Keep a single context instance across hot reloads so providers and
+// consumers never end up referencing different context objects.
+const CTX_KEY = "__cmManagerActionContext";
+const g = globalThis as unknown as Record<string, React.Context<Ctx | null> | undefined>;
+const ManagerActionContext: React.Context<Ctx | null> =
+  g[CTX_KEY] ?? (g[CTX_KEY] = createContext<Ctx | null>(null));
 
 export function useManagerActions(): Ctx {
   const ctx = useContext(ManagerActionContext);
