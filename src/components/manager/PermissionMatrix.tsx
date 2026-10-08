@@ -32,7 +32,9 @@ export function baselineAllowed(role: string, mod: string, action: string) {
 }
 
 export function PermissionMatrixGrid() {
-  const { stage } = useManagerActions();
+  const { stage, permissions, applyPermissions, resetPermissions } = useManagerActions();
+  const eff = (r: string, m: string, a: string) => permissions[key(r, m, a)] ?? baselineAllowed(r, m, a);
+  const overrideCount = Object.keys(permissions).length;
   const [draft, setDraft] = useState<Record<string, boolean>>({});
   const [saving, setSaving] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -41,19 +43,20 @@ export function PermissionMatrixGrid() {
   const changes = useMemo(
     () => Object.entries(draft).filter(([k, v]) => {
       const [role = "", mod = "", action = ""] = k.split("|");
-      return baselineAllowed(role, mod, action) !== v;
+      return eff(role, mod, action) !== v;
     }),
-    [draft],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [draft, permissions],
   );
   const dirty = changes.length > 0;
 
   function toggle(role: string, mod: string, action: string) {
     const k = key(role, mod, action);
-    const current = draft[k] ?? baselineAllowed(role, mod, action);
+    const current = draft[k] ?? eff(role, mod, action);
     setSaved(null);
     setDraft((d) => {
       const next = { ...d, [k]: !current };
-      if (next[k] === baselineAllowed(role, mod, action)) delete next[k];
+      if (next[k] === eff(role, mod, action)) delete next[k];
       return next;
     });
   }
@@ -74,12 +77,13 @@ export function PermissionMatrixGrid() {
         action: "permission.update",
         module: "Permissions",
         entity: `${role} · ${mod} · ${action}`,
-        before: baselineAllowed(role, mod, action) ? "Allow" : "Deny",
+        before: eff(role, mod, action) ? "Allow" : "Deny",
         after: v ? "Allow" : "Deny",
         severity: v ? "High" : "Medium",
       });
     });
-    setSaved(`${changes.length} permission change${changes.length === 1 ? "" : "s"} staged in this session.`);
+    applyPermissions(Object.fromEntries(changes));
+    setSaved(`${changes.length} permission change${changes.length === 1 ? "" : "s"} applied to the matrix.`);
     setDraft({});
     setSaving(false);
     setConfirming(false);
@@ -99,6 +103,15 @@ export function PermissionMatrixGrid() {
             : (saved ?? "No unsaved changes")}
         </span>
         <div className="ml-auto flex flex-wrap items-center gap-1.5">
+          {overrideCount > 0 && (
+            <Button
+              type="button" size="sm" variant="ghost" disabled={saving}
+              onClick={() => { resetPermissions(); setDraft({}); setSaved("Restored default permissions."); }}
+              className="h-8 min-h-9 gap-1.5 rounded-lg border border-[oklch(0.27_0.025_285)] px-2.5 text-[14px] text-[oklch(0.93_0.03_250)] hover:bg-[oklch(0.22_0.03_285)]"
+            >
+              Restore defaults ({overrideCount})
+            </Button>
+          )}
           <Button
             type="button" size="sm" variant="ghost" disabled={!dirty || saving}
             onClick={reset}
@@ -150,7 +163,7 @@ export function PermissionMatrixGrid() {
                   </th>
                   {PM_ACTIONS.map((a) => {
                     const k = key(role, mod, a);
-                    const base = baselineAllowed(role, mod, a);
+                    const base = eff(role, mod, a);
                     const value = draft[k] ?? base;
                     const changed = value !== base;
                     return (
@@ -184,7 +197,7 @@ export function PermissionMatrixGrid() {
       </div>
       <div className={`border-t border-[oklch(0.185_0.02_285)] bg-[oklch(0.185_0.02_285)] px-3 py-2 text-[14px] ${MUTED}`}>
         Effective permissions are computed per role, module and action. Management-side only — never exposed in the user dashboard.
-        Changes stay staged in this session until a permission service is connected.
+        Saved changes apply to the matrix immediately and are kept on this device.
       </div>
     </div>
   );

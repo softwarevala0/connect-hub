@@ -120,6 +120,10 @@ type Ctx = {
   clearStaged: () => void;
   soundOn: boolean;
   setSoundOn: (v: boolean) => void;
+  /** Applied permission overrides keyed "role|module|action" (persisted on device). */
+  permissions: Record<string, boolean>;
+  applyPermissions: (patch: Record<string, boolean>) => void;
+  resetPermissions: () => void;
 };
 
 const ManagerActionContext = createContext<Ctx | null>(null);
@@ -165,9 +169,25 @@ export function ManagerActionProvider({ children }: { children: ReactNode }) {
     window.setTimeout(() => triggerRef.current?.focus?.(), 0);
   }, []);
 
+  const [permissions, setPermissions] = useState<Record<string, boolean>>({});
+  useEffect(() => {
+    try { const s = localStorage.getItem("cm.permissions"); if (s) setPermissions(JSON.parse(s)); } catch { /* ignore */ }
+  }, []);
+  const applyPermissions = useCallback((patch: Record<string, boolean>) => {
+    setPermissions((prev) => {
+      const next = { ...prev, ...patch };
+      try { localStorage.setItem("cm.permissions", JSON.stringify(next)); } catch { /* ignore */ }
+      return next;
+    });
+  }, []);
+  const resetPermissions = useCallback(() => {
+    setPermissions({});
+    try { localStorage.removeItem("cm.permissions"); } catch { /* ignore */ }
+  }, []);
+
   const value = useMemo<Ctx>(
-    () => ({ run, stage, staged, clearStaged: () => setStaged([]), soundOn, setSoundOn }),
-    [run, stage, staged, soundOn, setSoundOn],
+    () => ({ run, stage, staged, clearStaged: () => setStaged([]), soundOn, setSoundOn, permissions, applyPermissions, resetPermissions }),
+    [run, stage, staged, soundOn, setSoundOn, permissions, applyPermissions, resetPermissions],
   );
 
   return (
