@@ -16,7 +16,6 @@ import {
   type ComponentType, type ReactNode,
 } from "react";
 import { AlertTriangle, CheckCircle2, Loader2, ShieldAlert } from "lucide-react";
-import type * as React from "react";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
