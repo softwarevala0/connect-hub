@@ -27,8 +27,8 @@ export class AdvisorError extends Error {
 }
 
 export type AdvisorDefaults = {
-  baseRole?: string;
-  defaults?: { role: string; grants: { module: string; actions: string[] }[] }[];
+  baseRole?: string | undefined;
+  defaults?: { role: string; grants: { module: string; actions: string[] }[] }[] | undefined;
 };
 
 export async function recommendAccess(description: string, ctx: AdvisorDefaults = {}): Promise<AccessRecommendation> {
