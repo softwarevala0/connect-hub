@@ -10,6 +10,7 @@
  * state says so explicitly, and the staged store is the single place a real
  * service call would be plugged in later (see `commitStagedChange`).
  */
+import type * as React from "react";
 import {
   createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
   type ComponentType, type ReactNode,
@@ -126,7 +127,12 @@ type Ctx = {
   resetPermissions: () => void;
 };
 
-const ManagerActionContext = createContext<Ctx | null>(null);
+// Keep a single context instance across hot reloads so providers and
+// consumers never end up referencing different context objects.
+const CTX_KEY = "__cmManagerActionContext";
+const g = globalThis as unknown as Record<string, React.Context<Ctx | null> | undefined>;
+const ManagerActionContext: React.Context<Ctx | null> =
+  g[CTX_KEY] ?? (g[CTX_KEY] = createContext<Ctx | null>(null));
 
 export function useManagerActions(): Ctx {
   const ctx = useContext(ManagerActionContext);
