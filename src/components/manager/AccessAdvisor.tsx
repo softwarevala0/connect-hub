@@ -10,7 +10,7 @@ type Rec = Extract<Awaited<ReturnType<typeof getAccessRecommendation>>, { ok: tr
 
 export function AccessAdvisor() {
   const run = useServerFn(getAccessRecommendation);
-  const { stage } = useManagerActions();
+  const { stage, permissions, applyPermissions } = useManagerActions();
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,19 +29,22 @@ export function AccessAdvisor() {
 
   function apply() {
     if (!rec) return;
+    const patch: Record<string, boolean> = {};
     rec.grants.forEach((g) => {
       g.actions.forEach((a) => {
+        patch[`${rec.role}|${g.module}|${a}`] = true;
         stage({
           actor: "You · Workspace Owner (AI advisor)",
           action: "permission.recommend",
           module: "Permissions",
           entity: `${rec.role} · ${g.module} · ${a}`,
-          before: baselineAllowed(rec.role, g.module, a) ? "Allow" : "Deny",
+          before: (permissions[`${rec.role}|${g.module}|${a}`] ?? baselineAllowed(rec.role, g.module, a)) ? "Allow" : "Deny",
           after: "Allow",
           severity: a === "Delete" || a === "Approve" ? "High" : "Low",
         });
       });
     });
+    applyPermissions(patch);
     setApplied(true);
   }
 
@@ -105,8 +108,8 @@ export function AccessAdvisor() {
             </ul>
           )}
           <div className="flex items-center justify-end gap-2">
-            {applied && <span className="text-[14px] text-primary">Staged in the session change log for review.</span>}
-            <Button size="sm" variant="outline" onClick={apply} disabled={applied}>Stage recommendation</Button>
+            {applied && <span className="text-[14px] text-primary">Applied to the permission matrix and logged.</span>}
+            <Button size="sm" variant="outline" onClick={apply} disabled={applied}>Apply recommendation</Button>
           </div>
         </div>
       )}
